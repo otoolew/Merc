@@ -43,11 +43,10 @@ public class VisionPerception : MonoBehaviour
 
     [SerializeField] private List<Character> detectedList;
     public List<Character> DetectedList { get => detectedList; set => detectedList = value; }
-
+    public bool HasTarget => currentTarget && currentTarget.IsValid();
+    
     [SerializeField, CanBeNull] private Character currentTarget;
     public Character CurrentTarget { get => currentTarget; set => currentTarget = value; }
-    
-    public bool HasTarget => !(currentTarget is null);
     
     [SerializeField] private Vector3 targetLastKnownLocation;
     public Vector3 TargetLastKnownLocation { get => targetLastKnownLocation; set => targetLastKnownLocation = value; }
@@ -214,7 +213,7 @@ public class VisionPerception : MonoBehaviour
                         {
                             currentTarget = detectedCharacter;
                             targetLastKnownLocation = currentTarget.transform.position;
-                            //onPerceptionUpdate.Invoke(currentTarget);
+                            onPerceptionUpdate.Invoke(currentTarget);
                             return true;
                         }
                     }
@@ -255,6 +254,7 @@ public class VisionPerception : MonoBehaviour
         
         if(character == currentTarget)
         {
+            currentTarget = null;
             FindBestTargetFromList();
         }
     }
