@@ -15,10 +15,7 @@ public class StateController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        variableDictionary.Add("Destination", Vector3Variable.CreateVariable("Destination", new Vector3(0,0,0)));
-        variableDictionary.Add("CoverPosition", Vector3Variable.CreateVariable("CoverPosition", new Vector3(0,0,0)));
-        variableDictionary.Add("HasTarget", BoolVariable.CreateVariable("HasTarget", false));
-        variableDictionary.Add("CurrentTarget", GameObjectVariable.CreateVariable("CurrentTarget", null));
+    
     }
 
     // Update is called once per frame

@@ -770,6 +770,7 @@ GameObject:
   - component: {fileID: 1746145243367117489}
   - component: {fileID: 7430970736048924068}
   - component: {fileID: 2603458019896984527}
+  - component: {fileID: 6600050136552174460}
   m_Layer: 0
   m_Name: AICharacter
   m_TagString: Enemy
@@ -860,10 +861,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3797ccd712a48da4b9a163480bd33a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  someFloat: 0
   assignedCharacter: {fileID: 7430970736048924090}
   animatorComp: {fileID: 4405724600701985148}
-  stateStackController: {fileID: 0}
   currentDestination: {x: 0, y: 0, z: 0}
   playMaker: {fileID: 2603458019896984527}
   playerCharacter: {fileID: 0}
@@ -1386,3 +1385,22 @@ MonoBehaviour:
     handleAnimatorIK: 0
   fsmTemplate: {fileID: 0}
   eventHandlerComponentsAdded: 0
+--- !u!114 &6600050136552174460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430970736048924093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c1daa5d87b119d4d87f549699ef3047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterOwner: {fileID: 7430970736048924090}
+  behaviorTasksList:
+  - {fileID: 11400000, guid: a9a2f4b45a1a5764ea9b07eece28352b, type: 2}
+  variableDictionary:
+    list: []
+  taskDictionary:
+    list: []
