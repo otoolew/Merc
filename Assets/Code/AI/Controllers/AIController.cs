@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class AIController : MonoBehaviour
@@ -12,48 +14,48 @@ public class AIController : MonoBehaviour
     [SerializeField] private Animator animatorComp;
     public Animator AnimatorComp { get => animatorComp; set => animatorComp = value; }
 
-    [SerializeField] private PlayMakerFSM playMaker;
-    public PlayMakerFSM PlayMaker { get => playMaker; set => playMaker = value; }
+    [SerializeField] private LevelArea assignedLevelArea;
+    public LevelArea AssignedLevelArea { get => assignedLevelArea; set => assignedLevelArea = value; }
+    
+    // [SerializeField] private BehaviorStack behaviorStack;
+    // public BehaviorStack BehaviorStack { get => behaviorStack; set => behaviorStack = value; }
+
+    // [SerializeField] private PlayMakerFSM playMaker;
+    // public PlayMakerFSM PlayMaker { get => playMaker; set => playMaker = value; }
     
     [Header("Available Behavior Nodes")]
-    [SerializeField] private List<BehaviorTask> behaviorTasksList;
-    public List<BehaviorTask> BehaviorTasksList { get => behaviorTasksList; set => behaviorTasksList = value; }
+    [SerializeField] private BehaviorTask primaryTask;
+    public BehaviorTask PrimaryTask { get => primaryTask; set => primaryTask = value; }
+
+    // [SerializeField] private List<BehaviorTask> behaviorTasksList;
+    // public List<BehaviorTask> BehaviorTasksList { get => behaviorTasksList; set => behaviorTasksList = value; }
+    
+    // [SerializeField] private UnityDictionary<string, BehaviorTask> taskDictionary;
+    // public UnityDictionary<string, BehaviorTask> TaskDictionary { get => taskDictionary; set => taskDictionary = value; }
     
     [SerializeField] private UnityDictionary<string, KeyVariable> variableDictionary;
     public UnityDictionary<string, KeyVariable> VariableDictionary { get => variableDictionary; set => variableDictionary = value; }
-
-    [SerializeField] private UnityDictionary<string, BehaviorTask> taskDictionary;
-    public UnityDictionary<string, BehaviorTask> TaskDictionary { get => taskDictionary; set => taskDictionary = value; }
     
-    #endregion
-
-    #region Values
-    [Header("Values")]
-    [SerializeField] private PlayerCharacter playerCharacter;
-    public PlayerCharacter PlayerCharacter { get => playerCharacter; set => playerCharacter = value; }
-    
-
     #endregion
 
     #region Monobehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        playerCharacter = FindObjectOfType<PlayerCharacter>();
         assignedCharacter.Controller = this;
         AssignedCharacter.VisionPerception.OnPerceptionUpdate.AddListener(OnPerceptionUpdate);
+        primaryTask = Instantiate(primaryTask);
+        primaryTask.Controller = this;
         
-        variableDictionary.Add("PrimaryTarget", KeyVariableFactory.CreateGameObjectVariable(new KeyVariableInfo(KeyVariableType.GAMEOBJECT,"PrimaryTarget" ), null));
+        LoadKeyVariables(primaryTask);
     }
-
+    
     private void Update()
     {
         if (assignedCharacter is null) return;
-
-        if (assignedCharacter.VisionPerception.HasTarget)
+        if (primaryTask.PreConditionsMet())
         {
-            LookAt(assignedCharacter.VisionPerception.CurrentTarget.transform.position);
-            AssignedCharacter.AbilityController.CurrentAbility.Fire();
+            primaryTask.UpdateTick();
         }
     }
     
@@ -73,17 +75,9 @@ public class AIController : MonoBehaviour
         {
             if (character.IsValid())
             {
-                SetGameObjectKeyValue("PrimaryTarget", character.gameObject);
+                SetGameObjectKeyValue("CurrentTarget", character.gameObject);
             }
         }    
-    }
-
-
-    
-    
-    public void LookAt(Vector3 pos)
-    {
-        AssignedCharacter.RotationComp.RotateTo(pos);
     }
     
     public void MoveToFirePoint(Vector3 pos)
@@ -93,7 +87,15 @@ public class AIController : MonoBehaviour
     
     #endregion
 
-    #region Key Variables
+    #region AI
+
+    private void OnTaskFinished(BehaviorTask behaviorTask)
+    {
+        Debug.Log("BehaviorTask Finished: " + behaviorTask.TaskName);
+    }
+
+    #region Keys
+
     private void LoadKeyVariables(BehaviorTask behaviorTask)
     {
         for (int i = 0; i < behaviorTask.KeyVariables.Length; i++)
@@ -122,16 +124,36 @@ public class AIController : MonoBehaviour
         }
     }
 
-    public void PushTask(string taskName)
+    #endregion
+
+    
+    #region Tasks
+    // public bool HasTask(string taskName)
+    // {
+    //     return taskDictionary.TryGetValue(taskName, out BehaviorTask behaviorTask);
+    // }
+    // public bool TransitionToTask(string taskName)
+    // {
+    //     if (taskDictionary.TryGetValue(taskName, out BehaviorTask behaviorTask))
+    //     {
+    //         //behaviorStack.Push(behaviorTask);
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    public void TaskFinished(BehaviorTask behaviorTask)
     {
-        
+        Debug.Log("Task " + behaviorTask.TaskName + " Finished!");
+        // if (behaviorStack.Peek().Equals(behaviorTask) && behaviorStack.Count > 1)
+        // {
+        //     behaviorStack.Pop();
+        // }
     }
     
+    #endregion
     
-    #region BehaviorVariables
-
+    
     #region Int
-
     public void SetInt(string variableName, int value)
     {
         if (variableDictionary.TryGetValue(variableName, out KeyVariable variable))
@@ -154,9 +176,7 @@ public class AIController : MonoBehaviour
 
     #endregion
 
-
     #region Float
-
     public void SetFloatKeyValue(string variableName, float value)
     {
         if (variableDictionary.TryGetValue(variableName, out KeyVariable variable))
@@ -201,8 +221,7 @@ public class AIController : MonoBehaviour
     }
 
     #endregion
-
-
+    
     #region Vector3
 
     public void SetVector3KeyValue(string variableName, Vector3 value)
@@ -248,13 +267,11 @@ public class AIController : MonoBehaviour
 
         return null;
     }
-
-    #endregion
-
+    
     #endregion
     
-
     #endregion
+    
     #region Editor
     /// <summary>
     /// On Validate is only called in Editor. By performing checks here was can rest assured they will not be null.
@@ -267,13 +284,6 @@ public class AIController : MonoBehaviour
             Debug.LogError("No Character assigned");
         }
     }
-    private void Reset()
-    {
-        //Output the message to the Console
-        Debug.Log("Reset");
-        if (!playerCharacter)
-            playerCharacter = FindObjectOfType<PlayerCharacter>();
-    }
-    
+
     #endregion
 }

@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1783fa45c1725f34caa758be3eceb463, type: 3}
-  m_Name: PatrolState
+  m_Script: {fileID: 11500000, guid: 7b8db2dfbe956434e8b70a9b802b564e, type: 3}
+  m_Name: CombatPatrol
   m_EditorClassIdentifier: 
-  stateName: Patrol State
-  patrolCircuit: {fileID: 0}
+  controller: {fileID: 0}
+  taskName: CombatPatrol
+  keyVariables:
+  - variableType: 2
+    variableName: HasTarget
+  - variableType: 4
+    variableName: CurrentTarget

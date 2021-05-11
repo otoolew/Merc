@@ -66,6 +66,7 @@ public class VisionPerception : MonoBehaviour
 
     private void Update()
     {
+        // Check for Line of Sight if not in line of sight, tick forget timer...
         if (detectedList.Count > 0)
         {
             FindBestTargetFromList();
@@ -158,7 +159,7 @@ public class VisionPerception : MonoBehaviour
         return false;
     }
     
-    private bool TargetInLineOfSight()
+    public bool TargetInLineOfSight()
     {
         if (currentTarget is null)
         {

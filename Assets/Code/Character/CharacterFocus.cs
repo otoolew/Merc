@@ -11,18 +11,29 @@ public class CharacterFocus : MonoBehaviour
     public Character Owner { get => owner; set => owner = value; }
     #endregion
 
+    [SerializeField] private Transform defaultFocusTransform;
+    public Transform DefaultFocusTransform { get => defaultFocusTransform; set => defaultFocusTransform = value; }
+
     [SerializeField] private Transform focusTransform;
     public Transform FocusTransform { get => focusTransform; set => focusTransform = value; }
 
     [SerializeField] private Vector3 defaultPosition;
     public Vector3 DefaultPosition { get => defaultPosition; set => defaultPosition = value; }
     
+    public Quaternion CurrentRotation => transform.rotation;
+    
     // Start is called before the first frame update
     private void Start()
     {
+        defaultPosition = focusTransform.localPosition;
         ResetAim();
     }
-    
+
+    private void Update()
+    {
+        
+    }
+
     public void ResetAim()
     {
         focusTransform.position = owner.transform.position + defaultPosition;

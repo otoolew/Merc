@@ -29,6 +29,7 @@ public class LevelArea : MonoBehaviour
     {
         AICharacter enemy = Instantiate(characterPrefab, null);
         enemy.gameObject.transform.position = spawnPoint.position;
+        enemy.Controller.AssignedLevelArea = this;
         enemy.MovementComp.PatrolCircuit = patrolCircuit;
         enemy.MovementComp.ContinueToPatrolPoint();
         Debug.Log("Spawned Character");

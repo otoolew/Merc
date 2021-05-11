@@ -14,11 +14,6 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     protected abstract Animator AnimatorComp { get; set; }
     
-    //public abstract CharacterMovement MovementComp { get; set; }
-    /// <summary>
-    /// The Characters Movement Component
-    /// </summary>
-    public abstract CharacterRotation RotationComp { get; set; }
     /// <summary>
     /// The Characters Health Component
     /// </summary>

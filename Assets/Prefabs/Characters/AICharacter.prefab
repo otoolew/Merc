@@ -112,8 +112,8 @@ MonoBehaviour:
     currentCount: 0
     loopTimer: 0
   radius: 5
-  viewAngle: 160
-  focusAngle: 30
+  viewAngle: 155
+  focusAngle: 15
   detectionLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -766,11 +766,8 @@ GameObject:
   - component: {fileID: 7430970736048924095}
   - component: {fileID: 4588734829519539342}
   - component: {fileID: 6669883230847504350}
-  - component: {fileID: 7430970736048924089}
   - component: {fileID: 1746145243367117489}
   - component: {fileID: 7430970736048924068}
-  - component: {fileID: 2603458019896984527}
-  - component: {fileID: 6600050136552174460}
   m_Layer: 0
   m_Name: AICharacter
   m_TagString: Enemy
@@ -863,9 +860,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assignedCharacter: {fileID: 7430970736048924090}
   animatorComp: {fileID: 4405724600701985148}
-  currentDestination: {x: 0, y: 0, z: 0}
-  playMaker: {fileID: 2603458019896984527}
-  playerCharacter: {fileID: 0}
+  assignedLevelArea: {fileID: 0}
+  primaryTask: {fileID: 11400000, guid: 8c17c5d6e65ed8047abd2982e0e937f6, type: 2}
+  variableDictionary:
+    list: []
 --- !u!114 &7430970736048924090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -882,9 +880,9 @@ MonoBehaviour:
   rigidbodyComp: {fileID: 7430970736048924088}
   animatorComp: {fileID: 4405724600701985148}
   movementComp: {fileID: 7430970736048924095}
-  rotationComp: {fileID: 7430970736048924089}
   healthComp: {fileID: 1746145243367117489}
   defaultPosition: {x: 0, y: 0, z: 0}
+  characterFocus: {fileID: 6669883230847504350}
   visionPerception: {fileID: 7430970734165205330}
   raycastAbilityConfig: {fileID: 11400000, guid: 3b43defad28d7f746bf1e281e580f6ed, type: 2}
   abilityController: {fileID: 7430970734479154656}
@@ -909,7 +907,7 @@ MonoBehaviour:
   currentWaypointIndex: 0
   accelerationSpeed: 50
   stoppingDistance: 0.1
-  strafeDistance: 0
+  strafeDistance: 0.5
 --- !u!195 &4588734829519539342
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -923,7 +921,7 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 180
+  m_AngularSpeed: 0
   m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -945,21 +943,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 7430970736048924090}
+  defaultFocusTransform: {fileID: 0}
   focusTransform: {fileID: 4519571416811047364}
   defaultPosition: {x: 0, y: 0, z: 0}
---- !u!114 &7430970736048924089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7430970736048924093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdba38ca4d7d93945972ab1ddd24b304, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 30
 --- !u!114 &1746145243367117489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1007,400 +993,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthComp: {fileID: 1746145243367117489}
   spawnOffset: {x: 0, y: 3, z: 0}
---- !u!114 &2603458019896984527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7430970736048924093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1384774831, guid: e743331561ef77147ae48cda9bcb8209, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fsm:
-    dataVersion: 2
-    usedInTemplate: {fileID: 0}
-    name: SentryGuard
-    startState: Initializing
-    states:
-    - name: Initializing
-      description: 
-      colorIndex: 0
-      position:
-        serializedVersion: 2
-        x: 57.289062
-        y: 99.484375
-        width: 100
-        height: 32
-      isBreakpoint: 0
-      isSequence: 0
-      hideUnused: 0
-      transitions:
-      - fsmEvent:
-          name: FINISHED
-          isSystemEvent: 1
-          isGlobal: 0
-        toState: Patrol
-        linkStyle: 0
-        linkConstraint: 0
-        linkTarget: 0
-        colorIndex: 0
-      actionData:
-        actionNames:
-        - HutongGames.PlayMaker.Actions.DebugGameObject
-        customNames:
-        - 
-        actionEnabled: 01
-        actionIsOpen: 01
-        actionStartIndex: 00000000
-        actionHashCodes: 68df9503
-        unityObjectParams: []
-        fsmGameObjectParams:
-        - useVariable: 1
-          name: 
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: {fileID: 0}
-        fsmOwnerDefaultParams: []
-        animationCurveParams: []
-        functionCallParams: []
-        fsmTemplateControlParams: []
-        fsmEventTargetParams: []
-        fsmPropertyParams: []
-        layoutOptionParams: []
-        fsmStringParams: []
-        fsmObjectParams: []
-        fsmVarParams: []
-        fsmArrayParams: []
-        fsmEnumParams: []
-        fsmFloatParams: []
-        fsmIntParams: []
-        fsmBoolParams: []
-        fsmVector2Params: []
-        fsmVector3Params: []
-        fsmColorParams: []
-        fsmRectParams: []
-        fsmQuaternionParams: []
-        stringParams: []
-        byteData: 0000000001
-        arrayParamSizes: 
-        arrayParamTypes: []
-        customTypeSizes: 
-        customTypeNames: []
-        paramDataType: 070000001300000001000000
-        paramName:
-        - logLevel
-        - gameObject
-        - sendToUnityLog
-        paramDataPos: 000000000000000004000000
-        paramByteDataSize: 040000000000000001000000
-    - name: EngageTarget
-      description: 
-      colorIndex: 0
-      position:
-        serializedVersion: 2
-        x: 318
-        y: 202
-        width: 114
-        height: 32
-      isBreakpoint: 0
-      isSequence: 0
-      hideUnused: 0
-      transitions:
-      - fsmEvent:
-          name: OnTargetLost
-          isSystemEvent: 0
-          isGlobal: 0
-        toState: Patrol
-        linkStyle: 0
-        linkConstraint: 0
-        linkTarget: 0
-        colorIndex: 0
-      actionData:
-        actionNames:
-        - HutongGames.PlayMaker.Actions.DebugGameObject
-        customNames:
-        - 
-        actionEnabled: 01
-        actionIsOpen: 01
-        actionStartIndex: 00000000
-        actionHashCodes: 68df9503
-        unityObjectParams: []
-        fsmGameObjectParams:
-        - useVariable: 1
-          name: 
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: {fileID: 0}
-        fsmOwnerDefaultParams: []
-        animationCurveParams: []
-        functionCallParams: []
-        fsmTemplateControlParams: []
-        fsmEventTargetParams: []
-        fsmPropertyParams: []
-        layoutOptionParams: []
-        fsmStringParams: []
-        fsmObjectParams: []
-        fsmVarParams: []
-        fsmArrayParams: []
-        fsmEnumParams: []
-        fsmFloatParams: []
-        fsmIntParams: []
-        fsmBoolParams: []
-        fsmVector2Params: []
-        fsmVector3Params: []
-        fsmColorParams: []
-        fsmRectParams: []
-        fsmQuaternionParams: []
-        stringParams: []
-        byteData: 0000000001
-        arrayParamSizes: 
-        arrayParamTypes: []
-        customTypeSizes: 
-        customTypeNames: []
-        paramDataType: 070000001300000001000000
-        paramName:
-        - logLevel
-        - gameObject
-        - sendToUnityLog
-        paramDataPos: 000000000000000004000000
-        paramByteDataSize: 040000000000000001000000
-    - name: Patrol
-      description: 
-      colorIndex: 0
-      position:
-        serializedVersion: 2
-        x: 52
-        y: 196
-        width: 132
-        height: 48
-      isBreakpoint: 0
-      isSequence: 0
-      hideUnused: 0
-      transitions:
-      - fsmEvent:
-          name: FINISHED
-          isSystemEvent: 1
-          isGlobal: 0
-        toState: Patrol
-        linkStyle: 0
-        linkConstraint: 0
-        linkTarget: 0
-        colorIndex: 0
-      - fsmEvent:
-          name: OnTargetSighted
-          isSystemEvent: 0
-          isGlobal: 0
-        toState: EngageTarget
-        linkStyle: 0
-        linkConstraint: 0
-        linkTarget: 0
-        colorIndex: 0
-      actionData:
-        actionNames:
-        - HutongGames.PlayMaker.Actions.ScanForTarget
-        customNames:
-        - 
-        actionEnabled: 01
-        actionIsOpen: 01
-        actionStartIndex: 00000000
-        actionHashCodes: 09eec701
-        unityObjectParams: []
-        fsmGameObjectParams:
-        - useVariable: 1
-          name: CurrentTarget
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: {fileID: 0}
-        fsmOwnerDefaultParams:
-        - ownerOption: 1
-          gameObject:
-            useVariable: 0
-            name: 
-            tooltip: 
-            showInInspector: 0
-            networkSync: 0
-            value: {fileID: 7430970734165205328}
-        animationCurveParams: []
-        functionCallParams: []
-        fsmTemplateControlParams: []
-        fsmEventTargetParams: []
-        fsmPropertyParams: []
-        layoutOptionParams: []
-        fsmStringParams: []
-        fsmObjectParams: []
-        fsmVarParams: []
-        fsmArrayParams: []
-        fsmEnumParams: []
-        fsmFloatParams: []
-        fsmIntParams: []
-        fsmBoolParams:
-        - useVariable: 1
-          name: HasTarget
-          tooltip: 
-          showInInspector: 0
-          networkSync: 0
-          value: 0
-        fsmVector2Params: []
-        fsmVector3Params: []
-        fsmColorParams: []
-        fsmRectParams: []
-        fsmQuaternionParams: []
-        stringParams:
-        - OnTargetSighted
-        - 
-        byteData: 01
-        arrayParamSizes: 
-        arrayParamTypes: []
-        customTypeSizes: 
-        customTypeNames: []
-        paramDataType: 140000001700000017000000110000001300000001000000
-        paramName:
-        - gameObject
-        - trueEvent
-        - falseEvent
-        - hasTarget
-        - storeResult
-        - everyFrame
-        paramDataPos: 000000000000000001000000000000000000000000000000
-        paramByteDataSize: 000000000000000000000000000000000000000001000000
-    events:
-    - name: OnEnemySighted
-      isSystemEvent: 0
-      isGlobal: 1
-    - name: FINISHED
-      isSystemEvent: 1
-      isGlobal: 0
-    - name: OnTargetSighted
-      isSystemEvent: 0
-      isGlobal: 0
-    - name: OnTargetLost
-      isSystemEvent: 0
-      isGlobal: 0
-    globalTransitions: []
-    variables:
-      floatVariables: []
-      intVariables: []
-      boolVariables:
-      - useVariable: 1
-        name: 
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        value: 0
-      - useVariable: 1
-        name: HasTarget
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        value: 0
-      stringVariables: []
-      vector2Variables: []
-      vector3Variables: []
-      colorVariables: []
-      rectVariables: []
-      quaternionVariables: []
-      gameObjectVariables:
-      - useVariable: 1
-        name: 
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        value: {fileID: 0}
-      - useVariable: 1
-        name: 
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        value: {fileID: 0}
-      - useVariable: 1
-        name: 
-        tooltip: 
-        showInInspector: 1
-        networkSync: 0
-        value: {fileID: 0}
-      - useVariable: 1
-        name: CurrentTarget
-        tooltip: 
-        showInInspector: 0
-        networkSync: 0
-        value: {fileID: 0}
-      objectVariables: []
-      materialVariables: []
-      textureVariables: []
-      arrayVariables: []
-      enumVariables: []
-      categories:
-      - 
-      variableCategoryIDs: 000000000000000000000000000000000000000000000000
-    description: Sentry Guard AI
-    docUrl: 
-    showStateLabel: 1
-    maxLoopCount: 0
-    watermark: 
-    password: 
-    locked: 0
-    manualUpdate: 0
-    outVariableIndices: 
-    keepDelayedEventsOnStateExit: 0
-    preprocessed: 0
-    ExposedEvents: []
-    OutputEvents: []
-    RestartOnEnable: 1
-    ResetVariablesOnEnable: 1
-    EnableDebugFlow: 1
-    EnableBreakpoints: 1
-    editorFlags: 501
-    activeStateName: 
-    mouseEvents: 0
-    handleLevelLoaded: 0
-    handleTriggerEnter2D: 0
-    handleTriggerExit2D: 0
-    handleTriggerStay2D: 0
-    handleCollisionEnter2D: 0
-    handleCollisionExit2D: 0
-    handleCollisionStay2D: 0
-    handleTriggerEnter: 0
-    handleTriggerExit: 0
-    handleTriggerStay: 0
-    handleCollisionEnter: 0
-    handleCollisionExit: 0
-    handleCollisionStay: 0
-    handleParticleCollision: 0
-    handleControllerColliderHit: 0
-    handleJointBreak: 0
-    handleJointBreak2D: 0
-    handleOnGUI: 0
-    handleFixedUpdate: 0
-    handleLateUpdate: 0
-    handleApplicationEvents: 0
-    handleUiEvents: 0
-    handleLegacyNetworking: 0
-    handleAnimatorMove: 0
-    handleAnimatorIK: 0
-  fsmTemplate: {fileID: 0}
-  eventHandlerComponentsAdded: 0
---- !u!114 &6600050136552174460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7430970736048924093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c1daa5d87b119d4d87f549699ef3047, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterOwner: {fileID: 7430970736048924090}
-  behaviorTasksList:
-  - {fileID: 11400000, guid: a9a2f4b45a1a5764ea9b07eece28352b, type: 2}
-  variableDictionary:
-    list: []
-  taskDictionary:
-    list: []

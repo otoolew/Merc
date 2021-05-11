@@ -114,14 +114,13 @@ public class PlayerController : MonoBehaviour
             playerCharacter = character;
 
             character.GetComponent<PlayerMovement>().InputActions = inputActions;
-            character.GetComponent<PlayerRotation>().InputActions = inputActions;
-            character.GetComponent<PlayerRotation>().GamepadEnabled = gamepadEnabled;
-
+            character.GetComponent<PlayerMovement>().GamepadEnabled = gamepadEnabled;
+  
             #region Character Input
 
-            inputActions.Character.Look.started += playerCharacter.RotationComp.OnLook;
-            inputActions.Character.Look.performed += playerCharacter.RotationComp.OnLook;
-            inputActions.Character.Look.canceled += playerCharacter.RotationComp.OnLook;
+            inputActions.Character.Look.started += playerCharacter.MovementComp.OnLook;
+            inputActions.Character.Look.performed += playerCharacter.MovementComp.OnLook;
+            inputActions.Character.Look.canceled += playerCharacter.MovementComp.OnLook;
 
 
             inputActions.Character.Left_PullTrigger.started += playerCharacter.OnLeftPullTrigger;
@@ -150,9 +149,9 @@ public class PlayerController : MonoBehaviour
     {
         if (playerCharacter)
         {
-            inputActions.Character.Look.started -= playerCharacter.RotationComp.OnLook;
-            inputActions.Character.Look.performed -= playerCharacter.RotationComp.OnLook;
-            inputActions.Character.Look.canceled -= playerCharacter.RotationComp.OnLook;
+            inputActions.Character.Look.started -= playerCharacter.MovementComp.OnLook;
+            inputActions.Character.Look.performed -= playerCharacter.MovementComp.OnLook;
+            inputActions.Character.Look.canceled -= playerCharacter.MovementComp.OnLook;
 
             inputActions.Character.Left_PullTrigger.started -= playerCharacter.OnLeftPullTrigger;
             inputActions.Character.Left_PullTrigger.canceled -= playerCharacter.OnLeftPullTrigger;

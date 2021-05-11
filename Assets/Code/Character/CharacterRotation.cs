@@ -7,7 +7,7 @@ public class CharacterRotation : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed;
     public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
-    public Quaternion CurrentRotation { get { return transform.rotation; } }
+    public Quaternion CurrentRotation => transform.rotation;
 
     public virtual void OnLook(InputAction.CallbackContext callbackContext)
     {
@@ -26,7 +26,8 @@ public class CharacterRotation : MonoBehaviour
     
     public void RotateTo(Transform value)
     {
-        Vector3 direction = (Vector3.right * value.position.x) + (Vector3.forward * value.position.y);
+        var position = value.position;
+        Vector3 direction = (Vector3.right * position.x) + (Vector3.forward * position.y);
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         if(targetRotation.eulerAngles != Vector3.zero)
         {

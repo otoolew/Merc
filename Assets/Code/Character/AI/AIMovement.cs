@@ -66,11 +66,34 @@ public class AIMovement : CharacterMovement
             SetDestination(moveVector);
         }
     }
-
+    
+    public override void RotateTo(Vector2 value)
+    {
+        Vector3 direction = (Vector3.right * value.x) + (Vector3.forward * value.y);
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        if (targetRotation.eulerAngles != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+        }
+    }
+    public void RotateTo(Transform value)
+    {
+        var position = value.position;
+        Vector3 direction = (Vector3.right * position.x) + (Vector3.forward * position.y);
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        if(targetRotation.eulerAngles != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+        }
+    }
     public void ContinueMovement()
     {
         if (navAgent != null)
         {
+            if (navAgent.isPathStale)
+            {
+                navAgent.SetDestination(CurrentDestination);
+            }
             navAgent.isStopped = false;
         }
     }
@@ -101,7 +124,7 @@ public class AIMovement : CharacterMovement
         }
     }
 
-    public bool InRangeOfDestination()
+    public bool HasArrived()
     {
         return Vector3.Distance(transform.position, CurrentDestination) <= navAgent.stoppingDistance;
     }
@@ -114,7 +137,7 @@ public class AIMovement : CharacterMovement
         }
     }
     
-    public void NextPatrolPoint()
+    public void GoToNextPatrolPoint()
     {
         CurrentWaypointIndex++;
         if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
@@ -140,8 +163,9 @@ public class AIMovement : CharacterMovement
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, StrafeLeftPosition);
-        Gizmos.DrawRay(transform.position, StrafeRightPosition);
+        var position = transform.position;
+        Gizmos.DrawRay(position, StrafeLeftPosition);
+        Gizmos.DrawRay(position, StrafeRightPosition);
         Gizmos.DrawCube(CurrentDestination + new Vector3(0,0.5f,0), new Vector3(1.0f, 0.5f, 1.0f));
     }
     #endregion

@@ -20,15 +20,18 @@ public class AICharacter : Character
     [SerializeField] private AIMovement movementComp;
     public AIMovement MovementComp { get => movementComp as AIMovement; set => movementComp = (AIMovement)value; }
 
-    [SerializeField] private CharacterRotation rotationComp;
-    public override CharacterRotation RotationComp { get => rotationComp; set => rotationComp = value; }
+    // [SerializeField] private CharacterRotation rotationComp;
+    // public override CharacterRotation RotationComp { get => rotationComp; set => rotationComp = value; }
 
     [SerializeField] private HealthComponent healthComp;
     public override HealthComponent HealthComp { get => healthComp; set => healthComp = value; }
 
     [SerializeField] private Vector3 defaultPosition;
     public Vector3 DefaultPosition { get => defaultPosition; set => defaultPosition = value; }
-
+    
+    [SerializeField] private CharacterFocus characterFocus;
+    public CharacterFocus CharacterFocus { get => characterFocus; set => characterFocus = value; }
+    
     [SerializeField] private VisionPerception visionPerception;
     public VisionPerception VisionPerception { get => visionPerception; set => visionPerception = value; }
 
@@ -51,8 +54,8 @@ public class AICharacter : Character
         HealthComp.Died.AddListener(character => OnDeath(this));
         SetUpAbility(abilityController, raycastAbilityConfig);
         visionPerception.enabled = true;
-        controller.PlayMaker.enabled = true;
-        controller.PlayMaker.Reset();
+        // controller.PlayMaker.enabled = true;
+        // controller.PlayMaker.Reset();
     }
     // Update is called once per frame
     private void Update()
@@ -73,10 +76,10 @@ public class AICharacter : Character
 
     #region Character
     
-    public void LookAt(Vector3 pos)
-    {
-        RotationComp.RotateTo(pos);
-    }
+    // public void LookAt(Vector3 pos)
+    // {
+    //     RotationComp.RotateTo(pos);
+    // }
     public override bool IsValid()
     {
         if (HealthComp == null) return false;
@@ -96,7 +99,7 @@ public class AICharacter : Character
     {
         visionPerception.enabled = false;
         movementComp.HaltMovement();
-        controller.PlayMaker.enabled = false;
+        //controller.PlayMaker.enabled = false;
         yield return new WaitForSeconds(1);
         Destroy(this.gameObject);
     }

@@ -23,15 +23,12 @@ public class PlayerCharacter : Character
     [SerializeField] private PlayerMovement movementComp;
     public PlayerMovement MovementComp { get => movementComp as PlayerMovement; set => movementComp = (PlayerMovement)value; }
 
-    [SerializeField] private PlayerRotation rotationComp;
-    public override CharacterRotation RotationComp { get => rotationComp as PlayerRotation; set => rotationComp = (PlayerRotation)value; }
+    // [SerializeField] private PlayerRotation rotationComp;
+    // public override CharacterRotation RotationComp { get => rotationComp as PlayerRotation; set => rotationComp = (PlayerRotation)value; }
 
     [SerializeField] private HealthComponent healthComp;
     public override HealthComponent HealthComp { get => healthComp; set => healthComp = value; }
 
-    [SerializeField] private Transform lookAtTarget;
-    public Transform LookAtTarget { get => lookAtTarget; set => lookAtTarget = value; }
-    
     #endregion
 
     #region Ability

@@ -16,7 +16,7 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private float rotationSpeed;
     public float RotationSpeed { get => rotationSpeed; set => rotationSpeed = value; }
-
+    
     #endregion
     public virtual void Move()
     {
@@ -33,8 +33,31 @@ public class CharacterMovement : MonoBehaviour
     public virtual void SetDestination(Vector3 moveVector)
     {
     }
-    public float DistanceToDestination(Vector3 moveVector)
+
+
+    public virtual void OnLook(InputAction.CallbackContext callbackContext)
     {
-        return Vector3.Distance(transform.position, moveVector);
+
+    }
+
+    public virtual void RotateTo(Vector2 value)
+    {
+        Vector3 direction = (Vector3.right * value.x) + (Vector3.forward * value.y);
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        if (targetRotation.eulerAngles != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+        }
+    }
+    
+    public void RotateTo(Transform value)
+    {
+        var position = value.position;
+        Vector3 direction = (Vector3.right * position.x) + (Vector3.forward * position.y);
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        if(targetRotation.eulerAngles != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+        }
     }
 }

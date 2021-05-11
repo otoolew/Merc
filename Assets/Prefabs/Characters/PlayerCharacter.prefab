@@ -92,7 +92,6 @@ GameObject:
   - component: {fileID: 4064287071184895282}
   - component: {fileID: 5886720481002854995}
   - component: {fileID: 4064287071184895283}
-  - component: {fileID: 511457653044844103}
   - component: {fileID: 4064287071184895281}
   - component: {fileID: 5577656019346033090}
   m_Layer: 0
@@ -188,9 +187,7 @@ MonoBehaviour:
   animatorComp: {fileID: 4064287071184895273}
   playerController: {fileID: 0}
   movementComp: {fileID: 4064287071184895283}
-  rotationComp: {fileID: 511457653044844103}
   healthComp: {fileID: 4064287071184895281}
-  focusPoint: {fileID: 7972668777687576450}
   leftAbilityController: {fileID: 1133424180802000121}
   rightAbilityController: {fileID: 7972668778380213851}
   dashAbilityController: {fileID: 7972668778657182284}
@@ -215,6 +212,7 @@ MonoBehaviour:
   orientToMovement: 0
   moveSpeed: 10
   rotationSpeed: 30
+  gamepadEnabled: 0
   rigidbodyComp: {fileID: 4064287071184895284}
   characterController: {fileID: 4064287071184895282}
   dashCooldownTimer:
@@ -227,36 +225,20 @@ MonoBehaviour:
     startCount: 0
     currentCount: 0
     loopTimer: 0
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  lookInput: {x: 0, y: 0}
+  autoAim: 0
+  isAiming: 0
+  offset: {x: 0, y: 0, z: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
   moveInput: {x: 0, y: 0}
   IsDashing: 0
   DashMultiplier: 3
   DashCooldown: 1
   DashActiveTime: 0.1
   DashDirection: {x: 0, y: 0, z: 0}
---- !u!114 &511457653044844103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4064287071184895278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bd38c6f9951e8b40b7453b443854736, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 10
-  visionComp: {fileID: 6587458806529276967}
-  gamepadEnabled: 0
-  targetRotation: {x: 0, y: 0, z: 0, w: 0}
-  lookInput: {x: 0, y: 0}
-  autoAim: 0
-  isAiming: 0
-  rotationFocus: {fileID: 0}
-  offset: {x: 0, y: 0, z: 0}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &4064287071184895281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,6 +336,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 5886720481002854995}
   visionCollider: {fileID: 6587458806529276966}
+  lostTargetTimer:
+    status: 0
+    startCount: 0
+    currentCount: 0
+    loopTimer: 0
   radius: 10
   viewAngle: 160
   focusAngle: 30
@@ -364,6 +351,7 @@ MonoBehaviour:
   - Player
   detectedList: []
   currentTarget: {fileID: 0}
+  targetLastKnownLocation: {x: 0, y: 0, z: 0}
   onPerceptionUpdate:
     m_PersistentCalls:
       m_Calls: []

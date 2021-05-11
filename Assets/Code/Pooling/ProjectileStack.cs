@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ProjectileStack : StackCollection<Projectile>
 {
-
     [SerializeField] private Stack<Projectile> stateStack;
     public override Stack<Projectile> StateStack => stateStack;
 
@@ -28,5 +27,4 @@ public class ProjectileStack : StackCollection<Projectile>
     //    stateStack = new Stack<Projectile>();
     //    stateList = new List<Projectile>();
     //}
-
 }
