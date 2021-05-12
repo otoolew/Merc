@@ -19,19 +19,11 @@ public class LevelArea : MonoBehaviour
         SpawnCharacter();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SpawnCharacter()
     {
         AICharacter enemy = Instantiate(characterPrefab, null);
         enemy.gameObject.transform.position = spawnPoint.position;
         enemy.Controller.AssignedLevelArea = this;
         enemy.MovementComp.PatrolCircuit = patrolCircuit;
-        enemy.MovementComp.ContinueToPatrolPoint();
-        Debug.Log("Spawned Character");
     }
 }

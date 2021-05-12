@@ -252,6 +252,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -364,6 +365,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -446,6 +448,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -558,6 +561,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -670,6 +674,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -768,6 +773,8 @@ GameObject:
   - component: {fileID: 6669883230847504350}
   - component: {fileID: 1746145243367117489}
   - component: {fileID: 7430970736048924068}
+  - component: {fileID: 8209181361786534377}
+  - component: {fileID: 4813309261160102216}
   m_Layer: 0
   m_Name: AICharacter
   m_TagString: Enemy
@@ -861,9 +868,7 @@ MonoBehaviour:
   assignedCharacter: {fileID: 7430970736048924090}
   animatorComp: {fileID: 4405724600701985148}
   assignedLevelArea: {fileID: 0}
-  primaryTask: {fileID: 11400000, guid: 8c17c5d6e65ed8047abd2982e0e937f6, type: 2}
-  variableDictionary:
-    list: []
+  stateMachine: {fileID: 4813309261160102216}
 --- !u!114 &7430970736048924090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,7 +886,6 @@ MonoBehaviour:
   animatorComp: {fileID: 4405724600701985148}
   movementComp: {fileID: 7430970736048924095}
   healthComp: {fileID: 1746145243367117489}
-  defaultPosition: {x: 0, y: 0, z: 0}
   characterFocus: {fileID: 6669883230847504350}
   visionPerception: {fileID: 7430970734165205330}
   raycastAbilityConfig: {fileID: 11400000, guid: 3b43defad28d7f746bf1e281e580f6ed, type: 2}
@@ -943,7 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 7430970736048924090}
-  defaultFocusTransform: {fileID: 0}
+  defaultFocusTransform: {fileID: 4519571416811047364}
   focusTransform: {fileID: 4519571416811047364}
   defaultPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1746145243367117489
@@ -993,3 +997,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthComp: {fileID: 1746145243367117489}
   spawnOffset: {x: 0, y: 3, z: 0}
+--- !u!114 &8209181361786534377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430970736048924093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1465209106, guid: c8d0ad23af520fe46aabe2b1fecf6462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"declarations":{"collection":{"$content":[{"name":"InPosition","value":{"$content":false,"$type":"System.Boolean"},"$version":"A"},{"name":"HasTarget","value":{"$content":false,"$type":"System.Boolean"},"$version":"A"},{"name":"CurrentTarget","value":null,"$version":"A"}],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
+--- !u!114 &4813309261160102216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430970736048924093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1999370065, guid: dcd2196c4e9166f499793f2007fcda35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"nest":{"source":"Macro","macro":0,"embed":null}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: 2ad35967af597c940b27e8ecd52239eb, type: 2}

@@ -20,15 +20,9 @@ public class AICharacter : Character
     [SerializeField] private AIMovement movementComp;
     public AIMovement MovementComp { get => movementComp as AIMovement; set => movementComp = (AIMovement)value; }
 
-    // [SerializeField] private CharacterRotation rotationComp;
-    // public override CharacterRotation RotationComp { get => rotationComp; set => rotationComp = value; }
-
     [SerializeField] private HealthComponent healthComp;
     public override HealthComponent HealthComp { get => healthComp; set => healthComp = value; }
 
-    [SerializeField] private Vector3 defaultPosition;
-    public Vector3 DefaultPosition { get => defaultPosition; set => defaultPosition = value; }
-    
     [SerializeField] private CharacterFocus characterFocus;
     public CharacterFocus CharacterFocus { get => characterFocus; set => characterFocus = value; }
     
@@ -54,18 +48,8 @@ public class AICharacter : Character
         HealthComp.Died.AddListener(character => OnDeath(this));
         SetUpAbility(abilityController, raycastAbilityConfig);
         visionPerception.enabled = true;
-        // controller.PlayMaker.enabled = true;
-        // controller.PlayMaker.Reset();
     }
-    // Update is called once per frame
-    private void Update()
-    {
-        
-    }
-    private void OnDestroy()
-    {
-        
-    }
+
     #endregion
     
     private void SetUpAbility(AbilityController abilityController, AbilityConfig abilityConfig)

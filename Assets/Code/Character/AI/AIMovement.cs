@@ -33,6 +33,15 @@ public class AIMovement : CharacterMovement
     [SerializeField] private float strafeDistance;
     public float StrafeDistance { get => strafeDistance; set => strafeDistance = value; }
     
+    [SerializeField] private MovementOrder currentMovementOrder;
+    public MovementOrder CurrentMovementOrder { get => currentMovementOrder; set => currentMovementOrder = value; }
+    
+    [SerializeField] private bool inPosition;
+    public bool InPosition { get => inPosition; set => inPosition = value; }
+    
+    [SerializeField] private bool destinationInRange;
+    public bool DestinationInRange => inPosition = Vector3.Distance(transform.position, CurrentDestination) <= navAgent.stoppingDistance;
+
     #endregion
 
     #region Properties
@@ -41,7 +50,7 @@ public class AIMovement : CharacterMovement
     public Vector3 CurrentDestination { get => NavAgent.destination; set => NavAgent.destination = value; }
     
     #endregion
-
+    
     // Start is called before the first frame update
     private void Start()
     {
@@ -54,16 +63,43 @@ public class AIMovement : CharacterMovement
         }
     }
     
+    public void IssueMovementOrder(MovementOrder order)
+    {
+        currentMovementOrder = order;
+        CurrentDestination = currentMovementOrder.Destination;
+        StopCoroutine(ProcessMovementOrder());
+        StartCoroutine(ProcessMovementOrder());
+    }
+
+    private IEnumerator ProcessMovementOrder()
+    {
+        inPosition = false;
+        yield return new WaitUntilInRange(transform, CurrentDestination, stoppingDistance);
+        inPosition = true;
+    }
+    
     public override void Move(Vector3 moveVector)
     {
         if (navAgent.isActiveAndEnabled)
         {
-            navAgent.destination = moveVector;
+            CurrentDestination = moveVector;
         }
         else
         {
             Debug.Log("Path was stale... Calculating new one.");
             SetDestination(moveVector);
+        }
+    }
+
+    public void SetOrientToMovement(bool value)
+    {
+        if (value)
+        {
+            OrientToMovement = true;
+            if (navAgent)
+            {
+                navAgent.angularSpeed = RotationSpeed;
+            }
         }
     }
     
@@ -76,16 +112,7 @@ public class AIMovement : CharacterMovement
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
         }
     }
-    public void RotateTo(Transform value)
-    {
-        var position = value.position;
-        Vector3 direction = (Vector3.right * position.x) + (Vector3.forward * position.y);
-        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-        if(targetRotation.eulerAngles != Vector3.zero)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
-        }
-    }
+
     public void ContinueMovement()
     {
         if (navAgent != null)
@@ -131,21 +158,29 @@ public class AIMovement : CharacterMovement
     
     public void ContinueToPatrolPoint()
     {
-        if (CurrentWaypointIndex < patrolCircuit.PatrolpointList.Count)
+        if (!(patrolCircuit is null))
         {
-            SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+            if (CurrentWaypointIndex < patrolCircuit.PatrolpointList.Count)
+            {
+                SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+                
+            }
         }
     }
     
     public void GoToNextPatrolPoint()
     {
-        CurrentWaypointIndex++;
-        if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
+        if (!(patrolCircuit is null))
         {
-            CurrentWaypointIndex = 0;
+            CurrentWaypointIndex++;
+            if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
+            {
+                CurrentWaypointIndex = 0;
+            }
+
+            SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
         }
 
-        SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
     }
     
     public void RandomLocationInRadius()
