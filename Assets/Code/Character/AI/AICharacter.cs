@@ -90,14 +90,10 @@ public class AICharacter : Character
     #endregion
     
     #region Editor
-    
     private void OnDrawGizmos()
     {
-        
         Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, transform.forward * 10);
-
+        Gizmos.DrawRay(transform.position, transform.forward * 1);
     }
-
     #endregion
 }

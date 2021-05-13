@@ -336,11 +336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 5886720481002854995}
   visionCollider: {fileID: 6587458806529276966}
-  lostTargetTimer:
-    status: 0
-    startCount: 0
-    currentCount: 0
-    loopTimer: 0
+  lostTargetTimer: {fileID: 0}
   radius: 10
   viewAngle: 160
   focusAngle: 30
@@ -350,6 +346,7 @@ MonoBehaviour:
   ignoreTags:
   - Player
   detectedList: []
+  hasTarget: 0
   currentTarget: {fileID: 0}
   targetLastKnownLocation: {x: 0, y: 0, z: 0}
   onPerceptionUpdate:
@@ -406,6 +403,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -492,6 +490,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -689,6 +688,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

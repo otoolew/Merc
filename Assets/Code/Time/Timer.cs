@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable] 
-public enum TimerStatus { RUNNING, COMPLETE }
-
 [Serializable]
 public class Timer
 {
@@ -57,7 +54,7 @@ public class Timer
             }
             else
             {
-                status = TimerStatus.COMPLETE;
+                status = TimerStatus.COMPLETED;
             }
         }
     }

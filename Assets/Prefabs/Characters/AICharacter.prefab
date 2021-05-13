@@ -69,8 +69,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7430970734165205329}
-  - component: {fileID: 7430970734165205330}
   - component: {fileID: 7430970734165205331}
+  - component: {fileID: 7430970734165205330}
+  - component: {fileID: 7538934219242492322}
   m_Layer: 0
   m_Name: Vision
   m_TagString: Untagged
@@ -86,12 +87,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7430970734165205328}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7430970736048924094}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &7430970734165205331
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430970734165205328}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7430970734165205330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,20 +120,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 7430970736048924090}
   visionCollider: {fileID: 7430970734165205331}
-  lostTargetTimer:
-    status: 0
-    startCount: 0
-    currentCount: 0
-    loopTimer: 0
+  lostTargetTimer: {fileID: 7538934219242492322}
   radius: 5
   viewAngle: 155
   focusAngle: 15
   detectionLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
   ignoreTags:
   - Enemy
   detectedList: []
+  hasTarget: 0
   currentTarget: {fileID: 0}
   targetLastKnownLocation: {x: 0, y: 0, z: 0}
   onPerceptionUpdate:
@@ -137,19 +148,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!135 &7430970734165205331
-SphereCollider:
+--- !u!114 &7538934219242492322
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7430970734165205328}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4664cb5cac2076d4c8d099ed8bd95a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status: 0
+  startCount: 3
+  elapsedTime: 0
+  loopTimer: 0
 --- !u!1 &7430970734479154662
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,9 +787,7 @@ GameObject:
   - component: {fileID: 6669883230847504350}
   - component: {fileID: 1746145243367117489}
   - component: {fileID: 7430970736048924068}
-  - component: {fileID: 8209181361786534377}
-  - component: {fileID: 4813309261160102216}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AICharacter
   m_TagString: Enemy
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
@@ -868,7 +880,7 @@ MonoBehaviour:
   assignedCharacter: {fileID: 7430970736048924090}
   animatorComp: {fileID: 4405724600701985148}
   assignedLevelArea: {fileID: 0}
-  stateMachine: {fileID: 4813309261160102216}
+  stateMachine: {fileID: 0}
 --- !u!114 &7430970736048924090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,6 +924,11 @@ MonoBehaviour:
   accelerationSpeed: 50
   stoppingDistance: 0.1
   strafeDistance: 0.5
+  currentMovementOrder:
+    movementComp: {fileID: 0}
+    destination: {x: 0, y: 0, z: 0}
+  inPosition: 0
+  destinationInRange: 0
 --- !u!195 &4588734829519539342
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -997,34 +1014,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthComp: {fileID: 1746145243367117489}
   spawnOffset: {x: 0, y: 3, z: 0}
---- !u!114 &8209181361786534377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7430970736048924093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1465209106, guid: c8d0ad23af520fe46aabe2b1fecf6462, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _json: '{"declarations":{"collection":{"$content":[{"name":"InPosition","value":{"$content":false,"$type":"System.Boolean"},"$version":"A"},{"name":"HasTarget","value":{"$content":false,"$type":"System.Boolean"},"$version":"A"},{"name":"CurrentTarget","value":null,"$version":"A"}],"$version":"A"},"$version":"A"}}'
-    _objectReferences: []
---- !u!114 &4813309261160102216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7430970736048924093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1999370065, guid: dcd2196c4e9166f499793f2007fcda35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _json: '{"nest":{"source":"Macro","macro":0,"embed":null}}'
-    _objectReferences:
-    - {fileID: 11400000, guid: 2ad35967af597c940b27e8ecd52239eb, type: 2}

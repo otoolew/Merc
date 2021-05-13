@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
-
 public class VisionPerception : MonoBehaviour
 {
     #region Components
@@ -17,10 +18,9 @@ public class VisionPerception : MonoBehaviour
     [SerializeField] private SphereCollider visionCollider;
     public SphereCollider VisionCollider { get => visionCollider; set => visionCollider = value; }
     
-    [SerializeField] private Timer lostTargetTimer;
-    public Timer LostTargetTimer { get => lostTargetTimer; set => lostTargetTimer = value; }
+    [SerializeField] private TimerComponent lostTargetTimer;
+    public TimerComponent LostTargetTimer { get => lostTargetTimer; set => lostTargetTimer = value; }
     
-    //TODO Implement Forget Current Target Timer
     #endregion
 
     #region Values
@@ -35,79 +35,61 @@ public class VisionPerception : MonoBehaviour
     [Range(5, 180)]
     [SerializeField] private float focusAngle;
     public float FocusAngle { get => focusAngle; set => focusAngle = value; }
-    
+
     [SerializeField] private LayerMask detectionLayer;
     public LayerMask DetectionLayer { get => detectionLayer; set => detectionLayer = value; }
-
+    
     [SerializeField] private string[] ignoreTags;
 
-    [SerializeField] private List<Character> detectedList;
-    public List<Character> DetectedList { get => detectedList; set => detectedList = value; }
-    public bool HasTarget => currentTarget && currentTarget.IsValid();
+    [SerializeField] private List<GameObject> detectedList;
+    public List<GameObject> DetectedList { get => detectedList; set => detectedList = value; }
     
-    [SerializeField, CanBeNull] private Character currentTarget;
-    public Character CurrentTarget { get => currentTarget; set => currentTarget = value; }
+    [SerializeField] private bool hasTarget;
+    public bool HasTarget { get => hasTarget; set => hasTarget = value; }
+    
+    [SerializeField, CanBeNull] private GameObject currentTarget;
+    public GameObject CurrentTarget { get => currentTarget; set => currentTarget = value; }
     
     [SerializeField] private Vector3 targetLastKnownLocation;
     public Vector3 TargetLastKnownLocation { get => targetLastKnownLocation; set => targetLastKnownLocation = value; }
     
     #endregion
     
-    [SerializeField] private UnityEvent<Character> onPerceptionUpdate;
-    public UnityEvent<Character> OnPerceptionUpdate { get => onPerceptionUpdate; set => onPerceptionUpdate = value; }
+    [SerializeField] private UnityEvent<GameObject> onPerceptionUpdate;
+    public UnityEvent<GameObject> OnPerceptionUpdate { get => onPerceptionUpdate; set => onPerceptionUpdate = value; }
+    
     
     
 #region Monobehaviour
     private void Start()
     {
-        lostTargetTimer = new Timer(2) {TimerCompleteAction = () => currentTarget = null};
-        detectedList = new List<Character>();
+        // lostTargetTimer = new Timer(2) {TimerCompleteAction = () => currentTarget = null};
+        detectedList = new List<GameObject>();
+        lostTargetTimer.OnComplete += TargetLost;
+    }
+
+    private void OnEnable()
+    {
+        lostTargetTimer.ResetTimer();
     }
 
     private void Update()
     {
-        // Check for Line of Sight if not in line of sight, tick forget timer...
-        if (detectedList.Count > 0)
-        {
-            FindBestTargetFromList();
-            
-            if (TargetInLineOfSight())
-            {
-                lostTargetTimer.ResetTimer();
-            }
-            else
-            {
-                lostTargetTimer.Tick();
-            }
-        }
+        TrackCurrentTarget();
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        Character detectedCharacter = other.GetComponent<Character>();
-        if(detectedCharacter == null || !detectedCharacter.IsValid())
+        if (IsTagIgnored(other.gameObject.tag))
         {
             return;
         }
-
-        if (detectedCharacter != null && !IsTagIgnored(detectedCharacter.tag))
-        {
-            AddToFromList(detectedCharacter);
-        }
+        AddToDetectedList(other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Character detectedCharacter = other.GetComponent<Character>();
-        if (detectedCharacter != null)
-        {
-            RemoveFromList(detectedCharacter);
-            if (detectedCharacter == currentTarget)
-            {
-                currentTarget = null;
-            }
-        }
-        FindBestTargetFromList();
+        RemoveFromDetectedList(other.gameObject);
     }
 
     private void OnDestroy()
@@ -115,17 +97,78 @@ public class VisionPerception : MonoBehaviour
         onPerceptionUpdate.RemoveAllListeners();
     }
     #endregion
-    
-    public bool IsTagIgnored(string tagValue) 
+
+    private void TrackCurrentTarget()
     {
-        for (int i = 0; i < ignoreTags.Length; i++)
+        if (HasTarget)
         {
-            if (tagValue.Equals(ignoreTags[i]))
+            if (currentTarget is null)
             {
-                return true;
+                hasTarget = false;
+                return;
             }
         }
-        return false; 
+        
+        if (HasLineOfSight(currentTarget))
+        {
+            lostTargetTimer.ResetTimer();
+            if (currentTarget is { }) targetLastKnownLocation = currentTarget.transform.position;
+        }
+    }
+
+    private void TargetLost()
+    {
+        currentTarget = null;
+        HasTarget = false;
+    }
+    private void AddToDetectedList(GameObject go)
+    {
+        Character character = (Character) go.GetComponent<Character>();
+        if (character) // If the target is a character listen for the characters death
+        {
+            character.HealthComp.Died.AddListener(OnTargetDeath);
+        }
+
+        if (!detectedList.Contains(go)) 
+        {
+            detectedList.Add(go);
+        }
+    }
+
+    private void RemoveFromDetectedList(GameObject go)
+    {
+        if (detectedList.Contains(go))
+        {
+            detectedList.Remove(go);
+        }
+
+        if (HasTarget && go == currentTarget)
+        {
+            currentTarget = null;
+            RefreshPrimaryTarget();
+        }
+    }
+    private void RemoveFromDetectedList(Character character)
+    {
+
+        if (character)
+        {
+            character.HealthComp.Died.RemoveListener(OnTargetDeath);
+        }
+
+        if (detectedList.Contains(character.gameObject))
+        {
+            detectedList.Remove(character.gameObject);
+        }
+
+        if (character.gameObject == currentTarget)
+        {
+            TargetLost();
+        }
+    }
+    public bool IsTagIgnored(string tagValue)
+    {
+        return ignoreTags.Any(tagValue.Equals);
     }
 
     public Vector3 DirectionFromAngle(float angleInDegrees, bool angleIsGlobal)
@@ -137,48 +180,25 @@ public class VisionPerception : MonoBehaviour
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
     
-    private bool HasLineOfSight(Vector3 location)
+    public bool HasLineOfSight()
     {
-        var position = transform.position;
-        Vector3 directionToTarget = (location - position).normalized;
-        Ray ray = new Ray
-        {
-            origin = position + new Vector3(0,1,0),
-            direction = directionToTarget,
-        };
-        
-        RaycastHit[] hitResults = new RaycastHit[1];
-        if (Physics.RaycastNonAlloc(ray, hitResults, radius, detectionLayer) > 0)
-        {
-            if (hitResults[0].collider.gameObject.GetComponent<Character>() == currentTarget)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return HasLineOfSight(currentTarget);
     }
     
-    public bool TargetInLineOfSight()
+    public bool HasLineOfSight(GameObject targetObject)
     {
-        if (currentTarget is null)
-        {
-            return false;
-        }
-        
         var position = transform.position;
-        Vector3 directionToTarget = (currentTarget.transform.position - position).normalized;
-        float distance = Vector3.Distance(position, currentTarget.transform.position);
+        Vector3 directionToTarget = (targetObject.transform.position - position).normalized;
         Ray ray = new Ray
         {
-            origin = position + new Vector3(0,1,0),
+            origin = position,
             direction = directionToTarget,
         };
         
         RaycastHit[] hitResults = new RaycastHit[1];
-        if (Physics.RaycastNonAlloc(ray, hitResults, radius, detectionLayer) > 0)
+        if (Physics.RaycastNonAlloc(ray, hitResults, radius, LayerMask.NameToLayer("Default")) > 0)
         {
-            if (hitResults[0].collider.gameObject.GetComponent<Character>() == currentTarget)
+            if (hitResults[0].collider.gameObject == targetObject)
             {
                 return true;
             }
@@ -207,16 +227,11 @@ public class VisionPerception : MonoBehaviour
                         direction = directionToTarget,
                     };
 
-                    if (Physics.Raycast(ray, out RaycastHit raycastHit, distance, detectionLayer))
+                    if (HasLineOfSight(detectedList[i]))
                     {  
-                        Character detectedCharacter = raycastHit.collider.GetComponent<Character>();
-                        if (!(detectedCharacter is null) && !IsTagIgnored(detectedCharacter.tag))
-                        {
-                            currentTarget = detectedCharacter;
-                            targetLastKnownLocation = currentTarget.transform.position;
-                            onPerceptionUpdate.Invoke(currentTarget);
-                            return true;
-                        }
+                        onPerceptionUpdate.Invoke(currentTarget);
+                        
+                        return true;
                     }
                 }
             }
@@ -227,43 +242,43 @@ public class VisionPerception : MonoBehaviour
             return false;
         }
     }
-
-    private void AddToFromList(Character character)
+    
+    private void RefreshPrimaryTarget()
     {
-        if (character)
+        if (detectedList.Count > 0)
         {
-            character.HealthComp.Died.AddListener(OnTargetDeath);
-        }
-
-        if (!detectedList.Contains(character)) 
-        {
-            detectedList.Add(character);
-        }
-    }
-
-    private void RemoveFromList(Character character)
-    {
-        if (character)
-        {
-            character.HealthComp.Died.RemoveListener(OnTargetDeath);
-        }
-
-        if (detectedList.Contains(character))
-        {
-            detectedList.Remove(character);
-        }     
+            // Sort by Distance
+            detectedList
+                .OrderBy(go => Vector3.Distance(go.transform.position, transform.position))
+                .FirstOrDefault(go => !go.CompareTag(gameObject.tag));
         
-        if(character == currentTarget)
-        {
-            currentTarget = null;
-            FindBestTargetFromList();
+            
+            for (int i = 0; i < detectedList.Count; i++)
+            {
+                Vector3 directionToTarget = (detectedList[i].transform.position - transform.position).normalized;
+                if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
+                {
+                    var position = transform.position;
+                    float distance = Vector3.Distance(position, detectedList[i].transform.position);
+                    Ray ray = new Ray
+                    {
+                        origin = position + new Vector3(0,1,0),
+                        direction = directionToTarget,
+                    };
+
+                    if (HasLineOfSight(detectedList[i]))
+                    {  
+                        onPerceptionUpdate.Invoke(currentTarget);
+                    }
+                }
+            }
         }
     }
     
     private void OnTargetDeath(Character character)
     {
         Debug.Log(" Target Died " + character.name);
-        RemoveFromList(character);
+        RemoveFromDetectedList(character);
     }
     
     private void OnValidate()
@@ -275,6 +290,15 @@ public class VisionPerception : MonoBehaviour
         if(owner == null)
         {
             Debug.LogError("No Owner. Please Set the Owner");
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (HasTarget)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, currentTarget.transform.position);
         }
     }
 }

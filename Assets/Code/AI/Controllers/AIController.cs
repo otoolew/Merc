@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Ludiq;
-using Bolt;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 public class AIController : MonoBehaviour
 {
@@ -19,9 +12,7 @@ public class AIController : MonoBehaviour
 
     [SerializeField] private LevelArea assignedLevelArea;
     public LevelArea AssignedLevelArea { get => assignedLevelArea; set => assignedLevelArea = value; }
-    
-    [SerializeField] private StateMachine stateMachine;
-    public StateMachine StateMachine { get => stateMachine; set => stateMachine = value; }
+
     
     #endregion
 
@@ -35,7 +26,7 @@ public class AIController : MonoBehaviour
 
     private void Update()
     {
-        UpdateVariables();
+        
     }
 
     #endregion
@@ -47,14 +38,13 @@ public class AIController : MonoBehaviour
         assignedCharacter.Controller = this;
         return assignedCharacter;
     }
-
+    
     public void UpdateVariables()
     {
         if (assignedCharacter.MovementComp.DestinationInRange)
         {
             Debug.Log("In RangE!");
         }
-        Variables.Object(gameObject).Set("InPosition", assignedCharacter.MovementComp.DestinationInRange);
     }
 
     public void Deploy()
@@ -62,15 +52,16 @@ public class AIController : MonoBehaviour
         assignedCharacter.MovementComp.ContinueToPatrolPoint();
     }
     
-    public void OnPerceptionUpdate(Character character)
+    public void OnPerceptionUpdate(GameObject go)
     {
-        if (character)
-        {
-            if (character.IsValid())
-            {
-                Variables.Object(gameObject).Set("CurrentTarget", character.gameObject);
-            }
-        }    
+        
+        // if (go)
+        // {
+        //     if (character.IsValid())
+        //     {
+        //         Variables.Object(gameObject).Set("CurrentTarget", character.gameObject);
+        //     }
+        // }    
     }
     
     public void MoveToFirePoint(Vector3 pos)
