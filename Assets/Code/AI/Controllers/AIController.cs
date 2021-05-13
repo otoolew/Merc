@@ -13,7 +13,6 @@ public class AIController : MonoBehaviour
     [SerializeField] private LevelArea assignedLevelArea;
     public LevelArea AssignedLevelArea { get => assignedLevelArea; set => assignedLevelArea = value; }
 
-    
     #endregion
 
     #region Monobehaviour
