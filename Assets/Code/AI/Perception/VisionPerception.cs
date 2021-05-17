@@ -187,6 +187,12 @@ public class VisionPerception : MonoBehaviour
     
     public bool HasLineOfSight(GameObject targetObject)
     {
+
+        if (targetObject == null)
+        {
+            return false;
+        }
+        
         var position = transform.position;
         Vector3 directionToTarget = (targetObject.transform.position - position).normalized;
         Ray ray = new Ray

@@ -2,11 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public abstract class StackCollection<T> : ScriptableObject, ISerializationCallbackReceiver
+[Serializable]
+public class StackCollection<T> : ISerializationCallbackReceiver
 {
-    public abstract Stack<T> StateStack { get; }
-    public abstract List<T> StateList { get; }
+    public StackCollection()
+    {
+        stateStack = new Stack<T>();
+        StoredValues = new List<T>();
+    }
+    
+    [SerializeField] private Stack<T> stateStack;
+    public Stack<T> StateStack { get => stateStack; set => stateStack = value; }
+    
+    [SerializeField] private List<T> storedValues;
+    public List<T> StoredValues { get => storedValues; set => storedValues = value; }
 
     #region Stack Operations
     public int Count { get { if(StateStack != null){ return StateStack.Count; } return 0; } }
@@ -49,17 +58,17 @@ public abstract class StackCollection<T> : ScriptableObject, ISerializationCallb
     #region Inspector
     public void OnBeforeSerialize()
     {
-        StateList.Clear();
+        StoredValues.Clear();
 
         foreach (var kvp in StateStack)
         {
-            StateList.Add(kvp);
+            StoredValues.Add(kvp);
         }
     }
     public void OnAfterDeserialize()
     {
-        for (int i = StateList.Count; i >= 0; i--)
-            StateStack.Push(StateList[i]);
+        for (int i = StoredValues.Count; i >= 0; i--)
+            StateStack.Push(StoredValues[i]);
     }
     #endregion
 }

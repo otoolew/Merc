@@ -181,7 +181,7 @@ MonoBehaviour:
   saveSlot: {fileID: 11400000, guid: 2f7014c7a55cdba47b86f02dd31a447d, type: 2}
   playerOptions: {fileID: 11400000, guid: 9d61590fec7399a4f8aa5dfd6ef74c7d, type: 2}
   gameMode: {fileID: 0}
-  currentSceneName: 
+  currentSceneName: Mission Hub
   fadeScreen: {fileID: 5390253688521974180}
   fadeDuration: 1
   isFading: 0

@@ -31,6 +31,7 @@ public class UnityDictionary<TKey, TValue> : UnityDictionary, ISerializationCall
         }
     }
 
+    private KeyValuePair<int, string> somePar;
 
     private Dictionary<TKey, uint> KeyPositions => _keyPositions.Value;
     private Lazy<Dictionary<TKey, uint>> _keyPositions;

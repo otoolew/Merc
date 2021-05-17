@@ -49,12 +49,12 @@ public class GameMode : Singleton<GameMode>
         base.Awake();
         CurrentGameState = GameState.LOADING;
         //GameManager.Instance.AssignGameMode(this);
-        InitGame();
+        //InitGame();
     }
     // Start is called before the first frame update
     private void Start()
     {
-
+        InitGame();
     }
 
     // Update is called once per frame
@@ -76,12 +76,13 @@ public class GameMode : Singleton<GameMode>
         // Init World States
 
         //Debug.Log("Init Game!");
-        playerController = FindObjectOfType<PlayerController>();
-        if (playerController == null)
-        {
-            playerController = Instantiate(GameModeData.CreatePlayerController(), null);
-            Debug.Log("Player Camera NULL\nCreated " + playerController.name);
-        }
+        // playerController = FindObjectOfType<PlayerController>();
+        //
+        // if (playerController == null)
+        // {
+        //     playerController = Instantiate(GameModeData.CreatePlayerController(), null);
+        //     Debug.Log("Player Camera NULL\nCreated " + playerController.name);
+        // }
         // Player UI
         playerUI = FindObjectOfType<PlayerUI>();
         if (playerUI == null)

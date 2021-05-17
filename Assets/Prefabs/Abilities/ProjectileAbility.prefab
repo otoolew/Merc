@@ -85,6 +85,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -124,7 +125,7 @@ MeshCollider:
   m_GameObject: {fileID: 7110105714282240890}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
@@ -144,8 +145,10 @@ MonoBehaviour:
   ownerTag: 
   firePoint: {fileID: 7110105713884471553}
   cooldownTimer:
+    status: 0
     startCount: 0
     currentCount: 0
+    loopTimer: 0
   munitionStorage: {fileID: -2895200215048646157}
   munitionResource: {fileID: 11400000, guid: 877ff0ca0313c8e47a4d45a625e395de, type: 2}
   projectileData: {fileID: 0}

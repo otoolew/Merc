@@ -25,37 +25,37 @@ public static class KeyVariableFactory
 
     #region Float Variable
 
-    public static FloatVariable CreateFloatVariable(KeyVariableInfo info)
-    {
-        FloatVariable variable = ScriptableObject.CreateInstance<FloatVariable>();
-        variable.VariableName = info.VariableName;
-        return variable;
-    }
-    public static FloatVariable CreateFloatVariable(KeyVariableInfo info, float startingValue)
-    {
-        FloatVariable variable = ScriptableObject.CreateInstance<FloatVariable>();
-        variable.VariableName = info.VariableName;
-        variable.SetValue(startingValue);
-        return variable;
-    }
+    // public static FloatVariable CreateFloatVariable(KeyVariableInfo info)
+    // {
+    //     FloatVariable variable = ScriptableObject.CreateInstance<FloatVariable>();
+    //     variable.VariableName = info.VariableName;
+    //     return variable;
+    // }
+    // public static FloatVariable CreateFloatVariable(KeyVariableInfo info, float startingValue)
+    // {
+    //     FloatVariable variable = ScriptableObject.CreateInstance<FloatVariable>();
+    //     variable.VariableName = info.VariableName;
+    //     variable.SetValue(startingValue);
+    //     return variable;
+    // }
 
     #endregion
 
     #region Bool Variable
 
-    public static BoolVariable CreateBoolVariable(KeyVariableInfo info)
-    {
-        BoolVariable variable = ScriptableObject.CreateInstance<BoolVariable>();
-        variable.VariableName = info.VariableName;
-        return variable;
-    }
-    public static BoolVariable CreateBoolVariable(KeyVariableInfo info, bool startingValue)
-    {
-        BoolVariable variable = ScriptableObject.CreateInstance<BoolVariable>();
-        variable.VariableName = info.VariableName;
-        variable.SetValue(startingValue);
-        return variable;
-    }
+    // public static BoolVariable CreateBoolVariable(KeyVariableInfo info)
+    // {
+    //     BoolVariable variable = ScriptableObject.CreateInstance<BoolVariable>();
+    //     variable.VariableName = info.VariableName;
+    //     return variable;
+    // }
+    // public static BoolVariable CreateBoolVariable(KeyVariableInfo info, bool startingValue)
+    // {
+    //     BoolVariable variable = ScriptableObject.CreateInstance<BoolVariable>();
+    //     variable.VariableName = info.VariableName;
+    //     variable.SetValue(startingValue);
+    //     return variable;
+    // }
 
     #endregion
     

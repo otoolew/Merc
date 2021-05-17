@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -12,6 +13,9 @@ public class AIController : MonoBehaviour
 
     [SerializeField] private LevelArea assignedLevelArea;
     public LevelArea AssignedLevelArea { get => assignedLevelArea; set => assignedLevelArea = value; }
+    
+    [SerializeReference]
+    public List<IVariable> Variables;
 
     #endregion
 
@@ -21,6 +25,7 @@ public class AIController : MonoBehaviour
     {
         assignedCharacter.Controller = this;
         AssignedCharacter.VisionPerception.OnPerceptionUpdate.AddListener(OnPerceptionUpdate);
+        Variables.Add(new FloatVariable("SomeFloat", 0.4f));
     }
 
     private void Update()

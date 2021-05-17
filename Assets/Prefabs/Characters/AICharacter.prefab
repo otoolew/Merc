@@ -72,8 +72,8 @@ GameObject:
   - component: {fileID: 7430970734165205331}
   - component: {fileID: 7430970734165205330}
   - component: {fileID: 7538934219242492322}
-  m_Layer: 0
-  m_Name: Vision
+  m_Layer: 8
+  m_Name: VisionPerception
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -880,7 +880,9 @@ MonoBehaviour:
   assignedCharacter: {fileID: 7430970736048924090}
   animatorComp: {fileID: 4405724600701985148}
   assignedLevelArea: {fileID: 0}
-  stateMachine: {fileID: 0}
+  Variables: []
+  references:
+    version: 1
 --- !u!114 &7430970736048924090
 MonoBehaviour:
   m_ObjectHideFlags: 0

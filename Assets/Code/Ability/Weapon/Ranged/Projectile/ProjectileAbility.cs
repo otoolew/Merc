@@ -73,7 +73,7 @@ public class ProjectileAbility : WeaponAbilityComponent
             if (munitionStorage.ConsumeAmmo())
             {
                 Projectile projectile = munitionResource.FetchFromPool();
-                projectile.gameObject.SetActive(true);
+                
                 projectile.OwnerTag = ownerTag;
                 projectile.PrepareForLaunch(this);
                 projectileData.InitProjectileData(projectile);

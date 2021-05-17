@@ -94,6 +94,8 @@ public class PlayerCharacter : Character
     private void SetUpAbility(AbilityController abilityController, AbilityConfig abilityConfig)
     {
         abilityController.Owner = this;
+        Debug.Log("Set Up ability " + gameObject.tag);
+        abilityController.tag = this.tag;
         abilityController.EquipAbility(abilityConfig, gameObject.tag);
     }
     private void SetUpAbility(DashAbilityController abilityController)

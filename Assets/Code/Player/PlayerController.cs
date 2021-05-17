@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+// [CreateAssetMenu(fileName = "newPlayerController", menuName = "Game/Controllers/Player")]
 public class PlayerController : MonoBehaviour
 {
     #region Input
-
-    //[SerializeField] private PlayerInput playerInput;
-    //public PlayerInput PlayerInput { get => playerInput; set => playerInput = value; }
-
     [SerializeField] private PlayerControls inputActions;
     public PlayerControls InputActions { get => inputActions; set => inputActions = value; }
     #endregion
@@ -36,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        //Debug.Log(playerInput.actionEvents.ToArray().ToString());
+        Debug.Log("PlayerController : Enabled\n"+ inputActions.controlSchemes.ToArray().ToString());
         inputActions.UI.Enable();
         inputActions.UI.Pause.performed += OnPause;
         inputActions.Character.Enable();

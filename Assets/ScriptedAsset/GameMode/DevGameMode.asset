@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: DevGameMode
   m_EditorClassIdentifier: 
   playerCameraPrefab: {fileID: 2170621085881653237, guid: 4ca104edfede9c84d8ada6a50dc8956f, type: 3}
-  playerControllerPrefab: {fileID: 4897098253526534043, guid: d38a945423341994dbcd7ba125f7068d, type: 3}
   playerUIPrefab: {fileID: 4640929441469741265, guid: d23956e994ac8f24a961c3abc2963cc3, type: 3}
-  playerCharacterPrefab: {fileID: 2399572596033645171, guid: d82d52dc52320434495f8c51e79d809b, type: 3}
-  enemyCharacterPrefab: {fileID: 1094612689649812196, guid: e43bdcdf0114cf145ad4f441b546aaf0, type: 3}
+  playerCharacterPrefab: {fileID: 5886720481002854995, guid: 9e5a2754ec5bb1d4aa8fe245eccaa968, type: 3}
+  enemyCharacterPrefab: {fileID: 7430970736048924090, guid: 53778796ad02c934b9814f6b35eb0d1f, type: 3}

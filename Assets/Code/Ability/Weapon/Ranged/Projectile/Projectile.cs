@@ -40,46 +40,52 @@ public class Projectile : MonoBehaviour, IPoolable
             Repool();
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag(ownerTag))
-            return;
-
-        HealthComponent hitObject = collision.collider.GetComponent<HealthComponent>();
-        if (hitObject != null)
+        Debug.Log("OnCollisionEnter " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
+        if (!collision.gameObject.CompareTag(ownerTag))
         {
-            Debug.Log("HealthComponent " + hitObject.name + " Tag: " + hitObject.tag);
-            Debug.Log("hitObject.CompareTag(ownerTag) " + hitObject.CompareTag(ownerTag));
-            hitObject.TakeDamage(Mathf.Abs(modifierValue), out HealthChangeInfo output);
+            HealthComponent hitObject = collision.gameObject.GetComponent<HealthComponent>();
+            if (hitObject != null)
+            {
+                Debug.Log("hitObject.CompareTag(ownerTag) " + hitObject.CompareTag(ownerTag));
+                Debug.Log("HealthComponent " + hitObject.name + " Tag: " + hitObject.tag);
+                hitObject.TakeDamage(Mathf.Abs(modifierValue), out HealthChangeInfo output);
+            }
         }
 
         PlayImpactEffects();
         Repool();
     }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log("OnTriggerEnter " + other.name + " Tag: " + other.tag);
-    //    if (other.CompareTag(ownerTag))
-    //        return;
-
-    //    HealthComponent hitObject = other.GetComponent<HealthComponent>();
-    //    if (hitObject != null)
-    //    {
-    //        Debug.Log("hitObject.CompareTag(ownerTag) " + hitObject.CompareTag(ownerTag));
-    //        Debug.Log("HealthComponent " + hitObject.name + " Tag: " + hitObject.tag);
-    //        hitObject.TakeDamage(Mathf.Abs(modifierValue), out HealthChangeInfo output);
-    //    }
-
-    //    PlayImpactEffects();
-    //    Repool();
-    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("OnTriggerEnter " + other.name + " Tag: " + other.tag);
+        if (!other.CompareTag(ownerTag))
+        {
+            
+            HealthComponent hitObject = other.GetComponent<HealthComponent>();
+            if (hitObject != null)
+            {
+                Debug.Log("hitObject.CompareTag(ownerTag) " + hitObject.CompareTag(ownerTag));
+                Debug.Log("HealthComponent " + hitObject.name + " Tag: " + hitObject.tag);
+                hitObject.TakeDamage(Mathf.Abs(modifierValue), out HealthChangeInfo output);
+            }
+        }
+    
+        PlayImpactEffects();
+        Repool();
+    }
+    
     public void PrepareForLaunch(ProjectileAbility projectileAbility)
     {
+        Debug.Log("Owner Tag: " + projectileAbility.OwnerTag);
         ownerAbilityComp = projectileAbility;
         ownerTag = projectileAbility.OwnerTag;
         fireOriginPoint = projectileAbility.FirePoint.position;
         transform.position = projectileAbility.FirePoint.position;
         transform.rotation = projectileAbility.FirePoint.rotation;
+        
     }
     public void Launch()
     {
@@ -97,7 +103,7 @@ public class Projectile : MonoBehaviour, IPoolable
     }
     private void OnDisable()
     {
-        ownerTag = "";
+        //ownerTag = "";
     }
     private void OnDrawGizmos()
     {

@@ -55,7 +55,8 @@ public class AICharacter : Character
     private void SetUpAbility(AbilityController abilityController, AbilityConfig abilityConfig)
     {
         abilityController.Owner = this;
-        abilityController.EquipAbility(abilityConfig,gameObject.tag);
+        abilityController.tag = this.tag;
+        abilityController.EquipAbility(abilityConfig, gameObject.tag);
     }
 
     #region Character
