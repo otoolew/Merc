@@ -67,7 +67,7 @@ public class AIMovement : CharacterMovement
         }
     }
     
-    public override void RotateTo(Vector2 value)
+    public override void RotateTo(Vector3 value)
     {
         Vector3 direction = (Vector3.right * value.x) + (Vector3.forward * value.y);
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -76,16 +76,7 @@ public class AIMovement : CharacterMovement
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
         }
     }
-    public void RotateTo(Transform value)
-    {
-        var position = value.position;
-        Vector3 direction = (Vector3.right * position.x) + (Vector3.forward * position.y);
-        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-        if(targetRotation.eulerAngles != Vector3.zero)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
-        }
-    }
+    
     public void ContinueMovement()
     {
         if (navAgent != null)

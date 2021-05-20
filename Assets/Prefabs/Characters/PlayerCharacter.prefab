@@ -93,7 +93,6 @@ GameObject:
   - component: {fileID: 5886720481002854995}
   - component: {fileID: 4064287071184895283}
   - component: {fileID: 4064287071184895281}
-  - component: {fileID: 5577656019346033090}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -260,23 +259,6 @@ MonoBehaviour:
   Died:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5577656019346033090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4064287071184895278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 736600478223164459d9928287aa903d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  owner: {fileID: 5886720481002854995}
-  aimTransform: {fileID: 6263508261111808488}
-  targetTransform: {fileID: 0}
-  defaultPosition: {x: 0, y: 1, z: 1}
-  hasTarget: 0
 --- !u!1 &6587458806529276965
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +388,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -492,6 +475,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -689,6 +673,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

@@ -40,7 +40,7 @@ public class CharacterMovement : MonoBehaviour
 
     }
 
-    public virtual void RotateTo(Vector2 value)
+    public virtual void RotateTo(Vector3 value)
     {
         Vector3 direction = (Vector3.right * value.x) + (Vector3.forward * value.y);
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);

@@ -20,9 +20,6 @@ public class AICharacter : Character
     [SerializeField] private AIMovement movementComp;
     public AIMovement MovementComp { get => movementComp as AIMovement; set => movementComp = (AIMovement)value; }
 
-    // [SerializeField] private CharacterRotation rotationComp;
-    // public override CharacterRotation RotationComp { get => rotationComp; set => rotationComp = value; }
-
     [SerializeField] private HealthComponent healthComp;
     public override HealthComponent HealthComp { get => healthComp; set => healthComp = value; }
 
@@ -54,18 +51,9 @@ public class AICharacter : Character
         HealthComp.Died.AddListener(character => OnDeath(this));
         SetUpAbility(abilityController, raycastAbilityConfig);
         visionPerception.enabled = true;
-        // controller.PlayMaker.enabled = true;
-        // controller.PlayMaker.Reset();
     }
     // Update is called once per frame
-    private void Update()
-    {
-        
-    }
-    private void OnDestroy()
-    {
-        
-    }
+
     #endregion
     
     private void SetUpAbility(AbilityController abilityController, AbilityConfig abilityConfig)
@@ -75,11 +63,17 @@ public class AICharacter : Character
     }
 
     #region Character
+
+    public void Attack()
+    {
+        if (VisionPerception.CurrentTarget != null)
+        {
+            MovementComp.HardStop();
+            MovementComp.RotateTo(VisionPerception.CurrentTarget.transform);
+            abilityController.PullTrigger();
+        }
+    }
     
-    // public void LookAt(Vector3 pos)
-    // {
-    //     RotationComp.RotateTo(pos);
-    // }
     public override bool IsValid()
     {
         if (HealthComp == null) return false;

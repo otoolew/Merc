@@ -125,7 +125,7 @@ public class PlayerMovement : CharacterMovement
     }
     
     #region PlayerInput Calls
-    public override void RotateTo(Vector2 value)
+    public override void RotateTo(Vector3 value)
     {
         if (gamepadEnabled)// This is an added check until I figure out how devices activate and deactivate on input
         {

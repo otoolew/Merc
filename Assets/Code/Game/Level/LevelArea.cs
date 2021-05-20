@@ -16,7 +16,7 @@ public class LevelArea : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnCharacter();
+       // SpawnCharacter();
     }
 
     // Update is called once per frame

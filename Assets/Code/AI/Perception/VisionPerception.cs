@@ -5,8 +5,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-
 public class VisionPerception : MonoBehaviour
 {
     #region Components
@@ -43,7 +41,7 @@ public class VisionPerception : MonoBehaviour
 
     [SerializeField] private List<Character> detectedList;
     public List<Character> DetectedList { get => detectedList; set => detectedList = value; }
-    public bool HasTarget => currentTarget && currentTarget.IsValid();
+    public bool HasTarget => currentTarget != null && currentTarget.IsValid();
     
     [SerializeField, CanBeNull] private Character currentTarget;
     public Character CurrentTarget { get => currentTarget; set => currentTarget = value; }
@@ -163,6 +161,7 @@ public class VisionPerception : MonoBehaviour
     {
         if (currentTarget is null)
         {
+            Debug.Log("TargetInLineOfSight False");
             return false;
         }
         
