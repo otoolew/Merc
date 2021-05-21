@@ -25,6 +25,9 @@ public class AIController : MonoBehaviour
     [SerializeField] private StateBehaviour currentState;
     public StateBehaviour CurrentState { get => currentState; set => currentState = value; }
     
+    [SerializeField] private OrderStack orderStack;
+    public OrderStack OrderStack { get => orderStack; set => orderStack = value; }
+    
     #endregion
     
     #region Monobehaviour
@@ -33,6 +36,9 @@ public class AIController : MonoBehaviour
     {
         assignedCharacter.Controller = this;
         AssignedCharacter.VisionPerception.OnPerceptionUpdate.AddListener(OnPerceptionUpdate);
+        
+        currentState.IsActiveState = true;
+        currentState.Enter();
     }
     
     private void Update()
@@ -67,6 +73,17 @@ public class AIController : MonoBehaviour
     public void MoveToFirePoint(Vector3 pos)
     {
         Vector2 randomPoint = Random.insideUnitCircle.normalized * assignedCharacter.VisionPerception.Radius;
+    }
+
+    public void TransitionToState(StateBehaviour state)
+    {
+        if (currentState != null)
+        {
+            currentState.IsActiveState = false;
+            currentState = state;
+            currentState.IsActiveState = true;
+            currentState.Enter();
+        }
     }
     #endregion
 

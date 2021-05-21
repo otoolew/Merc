@@ -20,7 +20,6 @@ public class AIMovement : CharacterMovement
 
     [SerializeField] private int currentWaypointIndex;
     public int CurrentWaypointIndex { get => currentWaypointIndex; set => currentWaypointIndex = value; }
-    
     #endregion
     
     #region Values
@@ -40,7 +39,20 @@ public class AIMovement : CharacterMovement
     public Vector3 StrafeRightPosition => transform.right * strafeDistance;
     public Vector3 CurrentDestination { get => NavAgent.destination; set => NavAgent.destination = value; }
     
+    [SerializeField] private MoveOrderStack moveOrderStack;
+    public MoveOrderStack MoveOrderStack { get => moveOrderStack; set => moveOrderStack = value; }
+    
+    /// <summary>
+    /// Do any Move Orders exist?
+    /// </summary>
+    public bool IsIdle => moveOrderStack.Count > 0;
+
     #endregion
+
+    private void Awake()
+    {
+        moveOrderStack = ScriptableObject.CreateInstance<MoveOrderStack>();
+    }
 
     // Start is called before the first frame update
     private void Start()
@@ -53,7 +65,39 @@ public class AIMovement : CharacterMovement
             navAgent.acceleration = accelerationSpeed;
         }
     }
+
+    public void ExecuteOrder()
+    {
+        if (moveOrderStack.Count > 0)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ProcessMoveOrder(moveOrderStack.Peek()));
+        }
+    }
     
+    public void PushMoveOrder(MoveOrder order)
+    {
+        moveOrderStack.Push(order);
+        Debug.Log("Push Order");
+        ExecuteOrder();
+    }
+    public void OnMoveOrderComplete(MoveOrder order)
+    {
+        Debug.Log("Order Complete");
+        moveOrderStack.Pop();
+        Debug.Log("Pop Order\n Stack Count: " + moveOrderStack.Count);
+        ExecuteOrder();
+    }
+    IEnumerator ProcessMoveOrder(MoveOrder order)
+    {
+        Move(order.Location);
+        while (!HasArrived())
+        {
+            yield return null;
+        }
+   
+        OnMoveOrderComplete(order);
+    }
     public override void Move(Vector3 moveVector)
     {
         if (navAgent.isActiveAndEnabled)
@@ -69,7 +113,8 @@ public class AIMovement : CharacterMovement
     
     public override void RotateTo(Vector3 value)
     {
-        Vector3 direction = (Vector3.right * value.x) + (Vector3.forward * value.y);
+        Vector3 direction = value - transform.position;
+        
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         if (targetRotation.eulerAngles != Vector3.zero)
         {
@@ -92,7 +137,7 @@ public class AIMovement : CharacterMovement
     /// <summary>
     /// Stop AI Movement but can continue
     /// </summary>
-    public void HaltMovement()
+    public void StopMovement()
     {
         if (!(navAgent is null))
         {
@@ -102,7 +147,7 @@ public class AIMovement : CharacterMovement
     /// <summary>
     /// Set to position to current and finished path nav.
     /// </summary>
-    public void HardStop()
+    public void StopBySet()
     {
         SetDestination(transform.position);
     }
@@ -137,6 +182,10 @@ public class AIMovement : CharacterMovement
         }
 
         SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+    }
+    public Vector3 GetCurrentPatrolPoint()
+    {
+        return patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position;
     }
     
     public void RandomLocationInRadius()

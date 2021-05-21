@@ -6,10 +6,10 @@ using UnityEngine;
 public class ProjectileStack : StackCollection<Projectile>
 {
     [SerializeField] private Stack<Projectile> stateStack;
-    public override Stack<Projectile> StateStack => stateStack;
+    protected override Stack<Projectile> StateStack => stateStack;
 
     [SerializeField] private List<Projectile> stateList;
-    public override List<Projectile> StateList => stateList;
+    protected override List<Projectile> StateList => stateList;
 
     private void OnEnable()
     {

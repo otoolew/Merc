@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackStateBehaviour : StateBehaviour
+public class IdleStateBehaviour : StateBehaviour
 {
     [SerializeField] private AIController controller;
     protected override AIController Controller { get => controller; set => controller = value; }
@@ -24,46 +23,49 @@ public class AttackStateBehaviour : StateBehaviour
             Init(controller);
         }
     }
-
+    
     protected override void Init(AIController controller)
     {
-        this.controller = controller;
-        this.movementComp = controller.AssignedCharacter.MovementComp;
-        this.visionPerception = controller.AssignedCharacter.VisionPerception;
+        base.Init(controller);
+        movementComp = controller.AssignedCharacter.MovementComp;
+        visionPerception = controller.AssignedCharacter.VisionPerception;
     }
     
     public override void Enter()
     {
-        base.Enter();
-
         if (visionPerception.HasTarget)
         {
-            movementComp.StopBySet();  
-        }
-        else
-        {
             Exit();
+            Debug.Log("Transition To Attack State");
         }
-
+        PushPatrolPattern();
     }
 
     public override void StateUpdate()
     {
-        if (visionPerception.HasTarget)
+        if (movementComp.MoveOrderStack.Count > 0)
         {
-            movementComp.RotateTo(visionPerception.CurrentTarget.WorldLocation);
-            controller.AssignedCharacter.Attack();
+            
         }
-        
-        
+        else
+        {
+            Debug.Log("Patrol Complete!");
+        }
     }
 
     public override void Exit()
     {
-        base.Exit();
         Debug.Log("Exit Attack State");
+        movementComp.ContinueToPatrolPoint();
+        IsActiveState = false;
         controller.CurrentState = exitState;
     }
-    
-    
+
+    public void PushPatrolPattern()
+    {
+        for (int i = 0; i < movementComp.PatrolCircuit.PatrolpointList.Count; i++)
+        {
+            movementComp.PushMoveOrder(new MoveOrder(movementComp, movementComp.PatrolCircuit.PatrolpointList[i].transform.position));
+        }
+    }
 }

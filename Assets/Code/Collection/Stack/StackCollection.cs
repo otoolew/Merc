@@ -5,11 +5,11 @@ using UnityEngine;
 
 public abstract class StackCollection<T> : ScriptableObject, ISerializationCallbackReceiver
 {
-    public abstract Stack<T> StateStack { get; }
-    public abstract List<T> StateList { get; }
+    protected abstract Stack<T> StateStack { get; }
+    protected abstract List<T> StateList { get; }
 
     #region Stack Operations
-    public int Count { get { if(StateStack != null){ return StateStack.Count; } return 0; } }
+    public int Count => StateStack.Count;
     public T Peek()
     {
         return StateStack.Peek();

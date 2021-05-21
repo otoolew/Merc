@@ -68,8 +68,8 @@ public class AICharacter : Character
     {
         if (VisionPerception.CurrentTarget != null)
         {
-            MovementComp.HardStop();
-            MovementComp.RotateTo(VisionPerception.CurrentTarget.transform);
+            MovementComp.StopBySet();
+            MovementComp.RotateTo(VisionPerception.CurrentTarget.transform.position);
             abilityController.PullTrigger();
         }
     }
@@ -92,7 +92,7 @@ public class AICharacter : Character
     private IEnumerator ProcessDeathRoutine()
     {
         visionPerception.enabled = false;
-        movementComp.HaltMovement();
+        movementComp.StopMovement();
         //controller.PlayMaker.enabled = false;
         yield return new WaitForSeconds(1);
         Destroy(this.gameObject);

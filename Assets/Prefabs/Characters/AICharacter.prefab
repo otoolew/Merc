@@ -774,6 +774,7 @@ GameObject:
   - component: {fileID: 7430970736048924068}
   - component: {fileID: 4072334736401475367}
   - component: {fileID: 4972201863373596864}
+  - component: {fileID: 142249851}
   m_Layer: 0
   m_Name: AICharacter
   m_TagString: Enemy
@@ -868,6 +869,8 @@ MonoBehaviour:
   animatorComp: {fileID: 4405724600701985148}
   assignedLevelArea: {fileID: 0}
   variables: {fileID: 4072334736401475367}
+  currentState: {fileID: 142249851}
+  orderStack: {fileID: 0}
 --- !u!114 &7430970736048924090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,6 +915,7 @@ MonoBehaviour:
   accelerationSpeed: 50
   stoppingDistance: 0.1
   strafeDistance: 0.5
+  moveOrderStack: {fileID: 0}
 --- !u!195 &4588734829519539342
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1007,8 +1011,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ef37e28964764418d62b5982110aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateName: Action
-  cost: 1
-  target: {fileID: 0}
-  targetTag: 
-  duration: 0
+  stateName: Attack
+  isActiveState: 0
+  controller: {fileID: 0}
+  movementComp: {fileID: 0}
+  visionPerception: {fileID: 0}
+  exitState: {fileID: 0}
+--- !u!114 &142249851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7430970736048924093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b08c65852c1ae94e809fe3dcccb8603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: Idle
+  isActiveState: 0
+  controller: {fileID: 0}
+  movementComp: {fileID: 0}
+  visionPerception: {fileID: 0}
+  exitState: {fileID: 4972201863373596864}
