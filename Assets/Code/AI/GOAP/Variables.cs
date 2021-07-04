@@ -28,8 +28,61 @@ public class Variables : MonoBehaviour
     //     }
     // }
     
-    #region Int
+    public void AddVariable(string variableName, VariableType variableType, out Variable variable)
+    {
+        variable = null;
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            switch (variableType)
+            {
+                case VariableType.BOOL:
+                    variable = BoolVariable.Create(variableName, false);
+                    break;
+                case VariableType.INT:
+                    variable = IntVariable.Create(variableName, 0);
+                    break;
+                case VariableType.FLOAT:
+                    variable = FloatVariable.Create(variableName, 0.0f);
+                    break;
+                case VariableType.VECTOR3:
+                    variable = Vector3Variable.Create(variableName, new Vector3(0,0,0));
+                    break;
+                case VariableType.GAMEOBJECT:
+                    variable = GameObjectVariable.Create(variableName, null);
+                    break;
+                default:
+                    Debug.Log("Variable Type not supported.");
+                    break;
+            }
+
+            if (variable != null)
+            {
+                variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, variable));
+            }
+        }
+    }
     
+    #region Int
+    public void AddIntVariable(string variableName, int value)
+    {
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, IntVariable.Create(variableName,value)));
+        }
+    }
+    public void AddIntVariable(string variableName, int startValue, out IntVariable variable)
+    {
+        variable = null;
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            variable = IntVariable.Create(variableName, startValue);
+
+            if (variable != null)
+            {
+                variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, variable));
+            }
+        }
+    }
     public void SetInt(string variableName, int value)
     {
         if (variableDictionary.TryGetValue(variableName, out Variable variable))
@@ -42,7 +95,7 @@ public class Variables : MonoBehaviour
             AddIntVariable(variableName, value);
         }
     }
-    
+
     public int GetIntValue(string variableName)
     {
         if (variableDictionary.TryGetValue(variableName, out Variable variable))
@@ -57,12 +110,16 @@ public class Variables : MonoBehaviour
         return 0;
     }
     
-    public void AddIntVariable(string variableName, int value)
+    public bool TryGetIntVariable(string variableName, out IntVariable varResult)
     {
-        if (!variableDictionary.ContainsKey(variableName))
+        if (variableDictionary.TryGetValue(variableName, out Variable variable))
         {
-            variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, IntVariable.Create(variableName,value)));
+            varResult = (IntVariable) variable;
+            return true;
         }
+
+        varResult = null;
+        return false;
     }
     
     #endregion
@@ -104,7 +161,30 @@ public class Variables : MonoBehaviour
             variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, FloatVariable.Create(variableName,value)));
         }
     }
+    public void AddFloatVariable(string variableName, float startValue, out FloatVariable variable)
+    {
+        variable = null;
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            variable = FloatVariable.Create(variableName, startValue);
 
+            if (variable != null)
+            {
+                variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, variable));
+            }
+        }
+    }
+    public bool TryGetFloatVariable(string variableName, out FloatVariable varResult)
+    {
+        if (variableDictionary.TryGetValue(variableName, out Variable variable))
+        {
+            varResult = (FloatVariable) variable;
+            return true;
+        }
+
+        varResult = null;
+        return false;
+    }
     #endregion
     
     #region Bool
@@ -133,6 +213,7 @@ public class Variables : MonoBehaviour
         return false;
     }
     
+
     public void AddBoolVariable(string variableName, bool value)
     {
         if (!variableDictionary.ContainsKey(variableName))
@@ -141,7 +222,29 @@ public class Variables : MonoBehaviour
             
         }
     }
-    
+    public void AddBoolVariable(string variableName, bool startValue, out BoolVariable variable)
+    {
+        variable = null;
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            variable = BoolVariable.Create(variableName, startValue);
+
+            if (variable != null)
+            {
+                variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, variable));
+            }
+        }
+    }
+    public bool TryGetBoolVariable(string variableName, out BoolVariable varResult)
+    {
+        if (variableDictionary.TryGetValue(variableName, out Variable variable))
+        {
+            varResult = (BoolVariable) variable;
+            return true;
+        }
+        varResult = null;
+        return false;
+    }
     #endregion
     
     #region Vector3
@@ -180,7 +283,30 @@ public class Variables : MonoBehaviour
             variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, Vector3Variable.Create(variableName,value)));
         }
     }
-    
+    public void AddVector3Variable(string variableName, Vector3 startValue, out Vector3Variable variable)
+    {
+        variable = null;
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            variable = Vector3Variable.Create(variableName, startValue);
+
+            if (variable != null)
+            {
+                variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, variable));
+            }
+        }
+    }
+    public bool TryGetVector3Variable(string variableName, out Vector3Variable varResult)
+    {
+        if (variableDictionary.TryGetValue(variableName, out Variable variable))
+        {
+            varResult = (Vector3Variable) variable;
+            return true;
+        }
+
+        varResult = null;
+        return false;
+    }
     #endregion
     
     #region GameObject
@@ -218,6 +344,29 @@ public class Variables : MonoBehaviour
             variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, GameObjectVariable.Create(variableName,value)));
         }
     }
+    public void AddGameObjectVariable(string variableName, GameObject startValue, out GameObjectVariable variable)
+    {
+        variable = null;
+        if (!variableDictionary.ContainsKey(variableName))
+        {
+            variable = GameObjectVariable.Create(variableName, startValue);
 
+            if (variable != null)
+            {
+                variableDictionary.Add(new KeyValuePair<string, Variable>(variableName, variable));
+            }
+        }
+    }
+    public bool TryGetGameObjectVariable(string variableName, out GameObjectVariable varResult)
+    {
+        if (variableDictionary.TryGetValue(variableName, out Variable variable))
+        {
+            varResult = (GameObjectVariable) variable;
+            return true;
+        }
+
+        varResult = null;
+        return false;
+    }
     #endregion
 }

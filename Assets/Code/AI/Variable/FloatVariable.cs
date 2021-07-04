@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public class FloatVariable : Variable
@@ -9,6 +10,7 @@ public class FloatVariable : Variable
     public override VariableType VariableType => VariableType.FLOAT;
     
     [SerializeField] private float value;
+    public float Value { get => value; set => this.value = value; }
     public override object GetValue()
     {
         return value;
@@ -18,6 +20,8 @@ public class FloatVariable : Variable
     {
         this.value = value;
     }
+    [SerializeField] private UnityEvent<Variable> onValueChanged;
+    public override UnityEvent<Variable> OnValueChanged { get => onValueChanged; set => onValueChanged = value; }
     public static FloatVariable Create(string variableName, float startingValue)
     {
         FloatVariable variable = ScriptableObject.CreateInstance<FloatVariable>();

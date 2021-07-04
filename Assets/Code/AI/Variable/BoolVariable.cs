@@ -11,15 +11,16 @@ public class BoolVariable : Variable
     public override string VariableName { get => variableName; set => variableName = value; }
     
     [SerializeField] private bool value;
-    public override VariableType VariableType => VariableType.BOOL;
-    
-    // [SerializeField] private VariableChangedEvent onVariableChanged;
-    // public override VariableChangedEvent OnVariableChanged { get => onVariableChanged; set => onVariableChanged = value; }
+    public bool Value { get => value; set => this.value = value; }
     public override object GetValue()
     {
         return value;
     }
+    public override VariableType VariableType => VariableType.BOOL;
     
+    [SerializeField] private UnityEvent<Variable> onValueChanged;
+    public override UnityEvent<Variable> OnValueChanged { get => onValueChanged; set => onValueChanged = value; }
+
     public void SetValue(bool value)
     {
         this.value = value;

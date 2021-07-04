@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 [CustomPropertyDrawer(typeof(DisableFloatAttribute))]
 public class DisableFloatDrawer : PropertyDrawer
 {
-    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    public override VisualElement CreatePropertyGUI(SerializedProperty property) // Needed
     {
         //return base.CreatePropertyGUI(property);
         FloatField floatField = new FloatField(property.displayName)
@@ -15,7 +15,7 @@ public class DisableFloatDrawer : PropertyDrawer
         floatField.SetEnabled(true);
         return floatField;
     }
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) // Needed
     {
         //base.OnGUI(position, property, label);
         GUI.enabled = false;

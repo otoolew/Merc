@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
-public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceiver
+public class InvestigateStateBehaviour : StateBehaviour
 {
     [SerializeField] private string stateName;
     public override string StateName { get => stateName; set => stateName = value; }
@@ -22,24 +20,23 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
     [SerializeField] private VisionPerception visionPerception;
     public VisionPerception VisionPerception { get => visionPerception; set => visionPerception = value; }
 
+    [SerializeField] private StateBehaviour idleState;
+    public StateBehaviour IdleState { get => idleState; set => idleState = value; }
+    
     [SerializeField] private StateBehaviour attackState;
     public StateBehaviour AttackState { get => attackState; set => attackState = value; }
 
     [SerializeReference] private string currentOrderName;
     public string CurrentOrderName { get => currentOrderName; set => currentOrderName = value; }
     
-    [SerializeField] private StateBehaviour completeState;
-    public StateBehaviour CompleteState { get => completeState; set => completeState = value; }
-
     private Stack<IOrder> orderStack = new Stack<IOrder>();
     public Stack<IOrder> OrderStack { get => orderStack; set => orderStack = value; }
     
     [SerializeReference] private List<IOrder> orderList = new List<IOrder>();
     public List<IOrder> OrderList { get => orderList; set => orderList = value; }
-
+    
     private void Start()
     {
-
         orderList = new List<IOrder>();
         orderStack = new Stack<IOrder>();
         
@@ -61,7 +58,7 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
         Debug.Log("Enter " + this.name);
         this.isActiveState = true;
         this.controller = controller;
-        PushPatrolPattern();
+        InvestigateArea();
     }
 
     public override void StateUpdate()
@@ -79,38 +76,42 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
         }
         else
         {
-            OrdersCompleted?.Invoke(this, completeState);
+            controller.TransitionToState(idleState);
         }
     }
     
-    public void PushOrder(IOrder order)
-    {
-        order.OrderCompleted.AddListener(OnOrderComplete);
-        OrderStack.Push(order);
-        currentOrderName = OrderStack.Peek().OrderName;
-    }
+    // public void PushOrder(IOrder order)
+    // {
+    //     order.OrderCompleted.AddListener(OnOrderComplete);
+    //     orderStack.Push(order);
+    //     currentOrderName = OrderStack.Peek().OrderName;
+    // }
 
-    public void OnOrderComplete(IOrder order, bool value)
-    {
-        Debug.Log(order.OrderName + " Complete");
-        order.OrderCompleted.RemoveAllListeners();
-        
-        if (orderStack.Count > 0)
-        {
-            if (OrderStack.Peek() == order)
-            {
-                OrderStack.Pop();
-            }
-        }
-    }
+    // public void OnOrderComplete(IOrder order, bool value)
+    // {
+    //     Debug.Log(order.OrderName + " Complete");
+    //     order.OrderCompleted.RemoveAllListeners();
+    //     
+    //     if (orderStack.Count > 0)
+    //     {
+    //         if (OrderStack.Peek() == order)
+    //         {
+    //             OrderStack.Pop();
+    //         }
+    //     }
+    // }
 
-    public void PushPatrolPattern()
+    public void InvestigateArea()
     {
-        for (int i = 0; i < movementComp.PatrolCircuit.PatrolpointList.Count; i++)
-        {
-            PushOrder(new MoveOrder(controller, movementComp.PatrolCircuit.PatrolpointList[i].transform.position));
-            PushOrder(new WaitOrder(controller, 0.5f));
-        }
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        orderStack.Push(new MoveOrder(controller, Random.insideUnitCircle));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        orderStack.Push(new MoveOrder(controller, Random.insideUnitCircle));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        orderStack.Push(new MoveOrder(controller, Random.insideUnitCircle));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        Debug.Log("OrderStack " + OrderStack.Count);
     }
 
     public void OnBeforeSerialize()

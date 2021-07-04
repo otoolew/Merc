@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ public class AIController : MonoBehaviour
 
     [SerializeField] private Animator animatorComp;
     public Animator AnimatorComp { get => animatorComp; set => animatorComp = value; }
-
+    
     [SerializeField] private LevelArea assignedLevelArea;
     public LevelArea AssignedLevelArea { get => assignedLevelArea; set => assignedLevelArea = value; }
     
@@ -25,20 +26,17 @@ public class AIController : MonoBehaviour
     [SerializeField] private StateBehaviour currentState;
     public StateBehaviour CurrentState { get => currentState; set => currentState = value; }
     
-    [SerializeField] private OrderStack orderStack;
-    public OrderStack OrderStack { get => orderStack; set => orderStack = value; }
-    
     #endregion
     
     #region Monobehaviour
+
     // Start is called before the first frame update
     private void Start()
     {
         assignedCharacter.Controller = this;
         AssignedCharacter.VisionPerception.OnPerceptionUpdate.AddListener(OnPerceptionUpdate);
         
-        currentState.IsActiveState = true;
-        currentState.Enter();
+        currentState.Enter(this);
     }
     
     private void Update()
@@ -52,20 +50,14 @@ public class AIController : MonoBehaviour
     #endregion
 
     #region Character Methods
-    public bool PossessCharacter(AICharacter character)
-    {
-        assignedCharacter = character;
-        assignedCharacter.Controller = this;
-        return assignedCharacter;
-    }
-    
+
     public void OnPerceptionUpdate(Character character)
     {
         if (character)
         {
             if (character.IsValid())
             {
-                //SetGameObjectKeyValue("CurrentTarget", character.gameObject);
+                Variables.SetGameObjectValue("CurrentTarget", character.gameObject);
             }
         }    
     }
@@ -75,18 +67,27 @@ public class AIController : MonoBehaviour
         Vector2 randomPoint = Random.insideUnitCircle.normalized * assignedCharacter.VisionPerception.Radius;
     }
 
+
     public void TransitionToState(StateBehaviour state)
     {
         if (currentState != null)
         {
             currentState.IsActiveState = false;
-            currentState = state;
-            currentState.IsActiveState = true;
-            currentState.Enter();
         }
+        currentState = state;
+        currentState.IsActiveState = true;
+        currentState.Enter(this);
     }
     #endregion
 
+    #region State
+
+    private void StateComplete(StateBehaviour state)
+    {
+        
+    } 
+
+    #endregion
     #region Editor
     /// <summary>
     /// On Validate is only called in Editor. By performing checks here was can rest assured they will not be null.

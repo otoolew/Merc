@@ -105,6 +105,12 @@ public class PlayerCharacter : Character
     #endregion
 
     #region Character
+
+    public override bool IsDead()
+    {
+        return HealthComp.IsDead;
+    }
+
     public override void OnDeath(Character character)
     {
         Debug.LogWarning("TODO: Implement PLAYER Character Death...");

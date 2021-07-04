@@ -80,7 +80,12 @@ public class AICharacter : Character
         
         return !HealthComp.IsDead;
     }
-    
+
+    public override bool IsDead()
+    {
+        return HealthComp.IsDead;
+    }
+
     #region Death
     public override void OnDeath(Character character)
     {

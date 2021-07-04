@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateComponent : MonoBehaviour
+public class CustomSample : MonoBehaviour
 {
+    [SerializeField] private int someInt;
+    public int SomeInt { get => someInt; set => someInt = value; }
+    
     // Start is called before the first frame update
     void Start()
     {

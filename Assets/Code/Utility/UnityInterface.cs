@@ -21,6 +21,7 @@ namespace MLIGames.Utilities
         /// </summary>
         public UnityEngine.Object unityObjectReference;
     }
+    
     /// <summary>
     /// A generic solution to allow the serialization of interfaces in Unity game objects
     /// </summary>

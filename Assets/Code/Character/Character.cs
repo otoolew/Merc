@@ -29,7 +29,13 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public abstract bool IsValid();
-
+    
+    /// <summary>
+    /// Is the character dead.
+    /// </summary>
+    /// <returns></returns>
+    public abstract bool IsDead();
+    
     /// <summary>
     /// Called when a character dies.
     /// </summary>

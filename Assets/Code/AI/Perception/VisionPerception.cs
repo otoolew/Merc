@@ -161,13 +161,13 @@ public class VisionPerception : MonoBehaviour
     {
         if (currentTarget is null)
         {
-            Debug.Log("TargetInLineOfSight False");
             return false;
         }
         
         var position = transform.position;
-        Vector3 directionToTarget = (currentTarget.transform.position - position).normalized;
-        float distance = Vector3.Distance(position, currentTarget.transform.position);
+        var targetPosition = currentTarget.transform.position;
+        Vector3 directionToTarget = (targetPosition - position).normalized;
+        float distance = Vector3.Distance(position, targetPosition);
         Ray ray = new Ray
         {
             origin = position + new Vector3(0,1,0),

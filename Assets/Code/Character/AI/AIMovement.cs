@@ -39,21 +39,8 @@ public class AIMovement : CharacterMovement
     public Vector3 StrafeRightPosition => transform.right * strafeDistance;
     public Vector3 CurrentDestination { get => NavAgent.destination; set => NavAgent.destination = value; }
     
-    [SerializeField] private MoveOrderStack moveOrderStack;
-    public MoveOrderStack MoveOrderStack { get => moveOrderStack; set => moveOrderStack = value; }
-    
-    /// <summary>
-    /// Do any Move Orders exist?
-    /// </summary>
-    public bool IsIdle => moveOrderStack.Count > 0;
-
     #endregion
-
-    private void Awake()
-    {
-        moveOrderStack = ScriptableObject.CreateInstance<MoveOrderStack>();
-    }
-
+    
     // Start is called before the first frame update
     private void Start()
     {
@@ -65,48 +52,16 @@ public class AIMovement : CharacterMovement
             navAgent.acceleration = accelerationSpeed;
         }
     }
-
-    public void ExecuteOrder()
-    {
-        if (moveOrderStack.Count > 0)
-        {
-            StopAllCoroutines();
-            StartCoroutine(ProcessMoveOrder(moveOrderStack.Peek()));
-        }
-    }
-    
-    public void PushMoveOrder(MoveOrder order)
-    {
-        moveOrderStack.Push(order);
-        Debug.Log("Push Order");
-        ExecuteOrder();
-    }
-    public void OnMoveOrderComplete(MoveOrder order)
-    {
-        Debug.Log("Order Complete");
-        moveOrderStack.Pop();
-        Debug.Log("Pop Order\n Stack Count: " + moveOrderStack.Count);
-        ExecuteOrder();
-    }
-    IEnumerator ProcessMoveOrder(MoveOrder order)
-    {
-        Move(order.Location);
-        while (!HasArrived())
-        {
-            yield return null;
-        }
-   
-        OnMoveOrderComplete(order);
-    }
+  
     public override void Move(Vector3 moveVector)
     {
+        Debug.Log("Moving...");
         if (navAgent.isActiveAndEnabled)
         {
             navAgent.destination = moveVector;
         }
         else
         {
-            Debug.Log("Path was stale... Calculating new one.");
             SetDestination(moveVector);
         }
     }
@@ -198,7 +153,7 @@ public class AIMovement : CharacterMovement
 
         SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
     }
-    
+
     #region Editor
     private void OnDrawGizmos()
     {

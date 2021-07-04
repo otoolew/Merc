@@ -11,7 +11,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private bool orientToMovement;
     public bool OrientToMovement { get => orientToMovement; set => orientToMovement = value; }
 
-    [SerializeField] private float moveSpeed;
+    [SerializeField, DisableFloat] private float moveSpeed;
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
 
     [SerializeField] private float rotationSpeed;
