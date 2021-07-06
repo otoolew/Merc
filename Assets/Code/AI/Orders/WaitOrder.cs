@@ -22,6 +22,9 @@ public class WaitOrder : IOrder
     [SerializeField] private bool isOrderComplete;
     public bool IsOrderComplete { get => isOrderComplete; set => isOrderComplete = value; }
     
+    [SerializeField] private Vector3 location;
+    public Vector3 Location { get => location; set => location = value; }
+    
     [SerializeField] private float waitTime;
     public  float WaitTime { get => waitTime; set => waitTime = value; }
 

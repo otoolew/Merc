@@ -5,19 +5,14 @@ using UnityEngine;
 [Serializable]
 public struct VariableInfo
 {
+    [SerializeField] private string variableName;
+    public string VariableName => variableName;
     [SerializeField] private VariableType variableType;
     public VariableType VariableType => variableType;
     
-    [SerializeField] private string variableName;
-    public string VariableName => variableName;
-
-    public VariableInfo(VariableType variableType, string variableName)
+    public VariableInfo(string variableName, VariableType variableType)
     {
-        this.variableType = variableType;
         this.variableName = variableName;
+        this.variableType = variableType;
     }
-    // public static VariableInfo CreateInstance(VariableInfo variableType, string variableName)
-    // {
-    //     return new VariableInfo(variableType,variableName);
-    // }
 }

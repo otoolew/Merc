@@ -866,6 +866,8 @@ MonoBehaviour:
   assignedLevelArea: {fileID: 0}
   variables: {fileID: 4072334736401475367}
   currentState: {fileID: 142249851}
+  idleStateBehaviour: {fileID: 0}
+  stateList: []
 --- !u!114 &7430970736048924090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1012,7 +1014,11 @@ MonoBehaviour:
   visionPerception: {fileID: 7430970734165205330}
   attackState: {fileID: 4972201863373596864}
   currentOrderName: 
+  completeState: {fileID: 142249851}
   orderList: []
+  onOrdersComplete:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
 --- !u!114 &4972201863373596864
@@ -1036,6 +1042,9 @@ MonoBehaviour:
   hasTarget: {fileID: 0}
   cautionState: {fileID: 0}
   idleState: {fileID: 0}
+  onOrdersComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7558897217711087625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1057,5 +1066,8 @@ MonoBehaviour:
   attackState: {fileID: 4972201863373596864}
   currentOrderName: 
   orderList: []
+  onOrdersComplete:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1

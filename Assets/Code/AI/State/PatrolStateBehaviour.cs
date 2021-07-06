@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
-public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceiver
+public class PatrolStateBehaviour : StateBehaviour
 {
     [SerializeField] private string stateName;
     public override string StateName { get => stateName; set => stateName = value; }
@@ -21,9 +19,9 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
     
     [SerializeField] private VisionPerception visionPerception;
     public VisionPerception VisionPerception { get => visionPerception; set => visionPerception = value; }
-    
-    [SerializeField] private List<VariableInfo> variableList = new List<VariableInfo>();
-    public List<VariableInfo> VariableList { get => variableList; set => variableList = value; }
+
+    [SerializeField] private StateBehaviour idleState;
+    public StateBehaviour IdleState { get => idleState; set => idleState = value; }
     
     [SerializeField] private StateBehaviour attackState;
     public StateBehaviour AttackState { get => attackState; set => attackState = value; }
@@ -31,9 +29,6 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
     [SerializeReference] private string currentOrderName;
     public string CurrentOrderName { get => currentOrderName; set => currentOrderName = value; }
     
-    [SerializeField] private StateBehaviour completeState;
-    public StateBehaviour CompleteState { get => completeState; set => completeState = value; }
-
     private Stack<IOrder> orderStack = new Stack<IOrder>();
     public Stack<IOrder> OrderStack { get => orderStack; set => orderStack = value; }
     
@@ -42,6 +37,13 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
     
     [SerializeField] private UnityEvent<StateBehaviour, StateBehaviour> onOrdersComplete;
     public override UnityEvent<StateBehaviour, StateBehaviour> OnOrdersComplete { get => onOrdersComplete; set => onOrdersComplete = value; }
+    
+    [SerializeField] private PatrolCircuit patrolCircuit;
+    public PatrolCircuit PatrolCircuit { get => patrolCircuit; set => patrolCircuit = value; }
+
+    [SerializeField] private int currentWaypointIndex;
+    public int CurrentWaypointIndex { get => currentWaypointIndex; set => currentWaypointIndex = value; }
+    
     private void Start()
     {
         orderList = new List<IOrder>();
@@ -62,18 +64,16 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
 
     public override void Enter(AIController controller)
     {
-        Debug.Log("Enter " + this.stateName);
+        Debug.Log("Enter " + this.name);
         this.isActiveState = true;
         this.controller = controller;
-        PushOrder(new WaitOrder(controller, 0.5f));
+        InvestigateArea();
     }
 
     public override void StateUpdate()
     {
-        Debug.Log(this.StateName + " StateUpdate");
         if (visionPerception.HasTarget)
         {
-            Debug.Log("visionPerception.HasTarget " + visionPerception.HasTarget);
             //controller.TransitionToState(attackState);
             orderStack.Clear();
             return;
@@ -81,25 +81,64 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
         
         if (orderStack.Count > 0)
         {
-            Debug.Log("Tick");
             OrderStack.Peek().Tick();
         }
         else
         {
-            onOrdersComplete?.Invoke(this, completeState);
+            //controller.TransitionToState(idleState);
+        }
+    }
+    public void ContinueToPatrolPoint()
+    {
+        if (CurrentWaypointIndex < patrolCircuit.PatrolpointList.Count)
+        {
+            movementComp.SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
         }
     }
     
+    public void GoToNextPatrolPoint()
+    {
+        CurrentWaypointIndex++;
+        if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
+        {
+            CurrentWaypointIndex = 0;
+        }
+
+        movementComp.SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+    }
+    public Vector3 GetCurrentPatrolPoint()
+    {
+        return patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position;
+    }
+    
+    public void RandomLocationInRadius()
+    {
+        CurrentWaypointIndex++;
+        if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
+        {
+            CurrentWaypointIndex = 0;
+        }
+
+        movementComp.SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+    }
+    public void PushPatrolPattern()
+    {
+        Debug.Log("PushPatrolPattern");
+        for (int i = 0; i < patrolCircuit.PatrolpointList.Count; i++)
+        {
+            PushOrder(new MoveOrder(controller, patrolCircuit.PatrolpointList[i].transform.position));
+            PushOrder(new WaitOrder(controller, 0.5f));
+        }
+    }
     public void PushOrder(IOrder order)
     {
         order.OrderCompleted.AddListener(OnOrderComplete);
         OrderStack.Push(order);
         currentOrderName = OrderStack.Peek().OrderName;
     }
-
     public void OnOrderComplete(IOrder order, bool value)
     {
-        Debug.Log(order.OrderName + " Complete");
+        Debug.Log(order.OrderName + " Complete " + value);
         order.OrderCompleted.RemoveAllListeners();
         
         if (orderStack.Count > 0)
@@ -110,7 +149,20 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
             }
         }
     }
-    
+    public void InvestigateArea()
+    {
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation * Random.insideUnitCircle));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation * Random.insideUnitCircle));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation * Random.insideUnitCircle));
+        orderStack.Push(new WaitOrder(controller, 0.5f));
+        Debug.Log("OrderStack " + OrderStack.Count);
+    }
+
+    #region Editor
     public void OnBeforeSerialize()
     {
         OrderList.Clear();
@@ -121,8 +173,8 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
                 OrderList.Add(kvp);
             }
         }
-
     }
+    
     public void OnAfterDeserialize()
     {
         if (orderList.Count > 0)
@@ -134,4 +186,20 @@ public class IdleStateBehaviour : StateBehaviour , ISerializationCallbackReceive
             }
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (orderStack.Count > 0)
+        {
+            Gizmos.color = Color.yellow;
+            if (orderStack.Peek().GetType() == typeof(MoveOrder))
+            {
+                MoveOrder order = (MoveOrder) orderStack.Peek();
+                Gizmos.DrawSphere(order.Location, 0.5f);
+            }
+            
+        }
+    }
+
+    #endregion
 }

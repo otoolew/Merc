@@ -43,6 +43,6 @@ public abstract class StateBehaviour : MonoBehaviour
     /// Invoked when orders are complete;
     /// </summary>
     /// <param name="controller"></param>
-    protected UnityAction<StateBehaviour, StateBehaviour> OrdersCompleted;
+    public abstract UnityEvent<StateBehaviour, StateBehaviour> OnOrdersComplete { get; set; }
 
 }

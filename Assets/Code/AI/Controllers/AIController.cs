@@ -23,8 +23,21 @@ public class AIController : MonoBehaviour
     [SerializeField] private Variables variables;
     public Variables Variables { get => variables; set => variables = value; }
     
-    [SerializeField] private StateBehaviour currentState;
-    public StateBehaviour CurrentState { get => currentState; set => currentState = value; }
+    [SerializeField] private StateComponent currentState;
+    public StateComponent CurrentState { get => currentState; set => currentState = value; }
+    
+    [SerializeField] private StateBehaviour currentStateBehaviour;
+    public StateBehaviour CurrentStateBehaviour { get => currentStateBehaviour; set => currentStateBehaviour = value; }
+    
+    [SerializeField] private IdleStateBehaviour idleStateBehaviour;
+    public IdleStateBehaviour IdleStateBehaviour { get => idleStateBehaviour; set => idleStateBehaviour = value; }
+    
+
+    private Stack<StateBehaviour> stateStack = new Stack<StateBehaviour>();
+    public Stack<StateBehaviour> StateStack { get => stateStack; set => stateStack = value; }
+    
+    [SerializeReference] private List<IVariable> stateList = new List<IVariable>();
+    public List<IVariable> StateList { get => stateList; set => stateList = value; }
     
     #endregion
     
@@ -33,17 +46,19 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        PushState(currentState);
         assignedCharacter.Controller = this;
         AssignedCharacter.VisionPerception.OnPerceptionUpdate.AddListener(OnPerceptionUpdate);
-        
-        currentState.Enter(this);
+        StateList.Add(new BoolVariable("SomeBull", true));
+        StateList.Add(new FloatVariable("SomeFloat", 0.5f));
+        //currentState.EnterState(this);
     }
     
     private void Update()
     {
         if (currentState != null)
         {
-            currentState.StateUpdate();
+            //currentState.UpdateState(this);
         }
     }
 
@@ -66,23 +81,60 @@ public class AIController : MonoBehaviour
     {
         Vector2 randomPoint = Random.insideUnitCircle.normalized * assignedCharacter.VisionPerception.Radius;
     }
+        
+    // public void PushState(StateBehaviour state)
+    // {
+    //     state.OnOrdersComplete.AddListener(OnStateOrdersComplete);
+    //     StateStack.Push(state);
+    //     //currentState = StateStack.Peek();
+    // }
 
-
-    public void TransitionToState(StateBehaviour state)
+    public void OnStateOrdersComplete(StateBehaviour state, StateBehaviour nextState)
+    {
+        Debug.Log(state.StateName + " Complete");
+        state.OnOrdersComplete.RemoveAllListeners();
+        
+        if (StateStack.Count > 0)
+        {
+            if (StateStack.Peek() == state)
+            {
+                StateStack.Pop();
+                //PushState(nextState);
+            }
+        }
+        else
+        {
+            //PushState(nextState);
+        }
+    }
+    public void TransitionToState(StateComponent state)
     {
         if (currentState != null)
         {
-            currentState.IsActiveState = false;
+            //currentState.ExitState(this);
         }
         currentState = state;
-        currentState.IsActiveState = true;
-        currentState.Enter(this);
+        //currentState.EnterState(this);
     }
+    // public void TransitionToState(StateBehaviour state)
+    // {
+    //     if (currentState != null)
+    //     {
+    //         currentState.IsActiveState = false;
+    //     }
+    //     currentState = state;
+    //     currentState.IsActiveState = true;
+    //     currentState.Enter(this);
+    // }
     #endregion
 
     #region State
 
-    private void StateComplete(StateBehaviour state)
+    public void PushState(StateComponent stateComp)
+    {
+        
+    }
+    private void CompleteState(StateBehaviour state)
     {
         
     } 

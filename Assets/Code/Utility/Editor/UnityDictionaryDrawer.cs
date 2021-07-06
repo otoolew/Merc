@@ -90,7 +90,7 @@ public class UnityDictionaryDrawer : PropertyDrawer
 
         EditorGUI.BeginChangeCheck();
         EditorGUI.PropertyField(rect0, keyProp);
-
+        EditorGUI.PropertyField(rect0, keyProp);
         rect0.x += halfWidth + 4f;
 
         EditorGUI.PropertyField(rect0, valueProp);

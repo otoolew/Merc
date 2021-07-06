@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class InvestigateStateBehaviour : StateBehaviour
 {
@@ -35,6 +37,9 @@ public class InvestigateStateBehaviour : StateBehaviour
     [SerializeReference] private List<IOrder> orderList = new List<IOrder>();
     public List<IOrder> OrderList { get => orderList; set => orderList = value; }
     
+    [SerializeField] private UnityEvent<StateBehaviour, StateBehaviour> onOrdersComplete;
+    public override UnityEvent<StateBehaviour, StateBehaviour> OnOrdersComplete { get => onOrdersComplete; set => onOrdersComplete = value; }
+    
     private void Start()
     {
         orderList = new List<IOrder>();
@@ -65,7 +70,7 @@ public class InvestigateStateBehaviour : StateBehaviour
     {
         if (visionPerception.HasTarget)
         {
-            controller.TransitionToState(attackState);
+            //controller.TransitionToState(attackState);
             orderStack.Clear();
             return;
         }
@@ -76,44 +81,24 @@ public class InvestigateStateBehaviour : StateBehaviour
         }
         else
         {
-            controller.TransitionToState(idleState);
+            //controller.TransitionToState(idleState);
         }
     }
     
-    // public void PushOrder(IOrder order)
-    // {
-    //     order.OrderCompleted.AddListener(OnOrderComplete);
-    //     orderStack.Push(order);
-    //     currentOrderName = OrderStack.Peek().OrderName;
-    // }
-
-    // public void OnOrderComplete(IOrder order, bool value)
-    // {
-    //     Debug.Log(order.OrderName + " Complete");
-    //     order.OrderCompleted.RemoveAllListeners();
-    //     
-    //     if (orderStack.Count > 0)
-    //     {
-    //         if (OrderStack.Peek() == order)
-    //         {
-    //             OrderStack.Pop();
-    //         }
-    //     }
-    // }
-
     public void InvestigateArea()
     {
         orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation));
         orderStack.Push(new WaitOrder(controller, 0.5f));
-        orderStack.Push(new MoveOrder(controller, Random.insideUnitCircle));
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation * Random.insideUnitCircle));
         orderStack.Push(new WaitOrder(controller, 0.5f));
-        orderStack.Push(new MoveOrder(controller, Random.insideUnitCircle));
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation * Random.insideUnitCircle));
         orderStack.Push(new WaitOrder(controller, 0.5f));
-        orderStack.Push(new MoveOrder(controller, Random.insideUnitCircle));
+        orderStack.Push(new MoveOrder(controller, visionPerception.TargetLastKnownLocation * Random.insideUnitCircle));
         orderStack.Push(new WaitOrder(controller, 0.5f));
         Debug.Log("OrderStack " + OrderStack.Count);
     }
 
+    #region Editor
     public void OnBeforeSerialize()
     {
         OrderList.Clear();
@@ -124,8 +109,8 @@ public class InvestigateStateBehaviour : StateBehaviour
                 OrderList.Add(kvp);
             }
         }
-
     }
+    
     public void OnAfterDeserialize()
     {
         if (orderList.Count > 0)
@@ -137,4 +122,21 @@ public class InvestigateStateBehaviour : StateBehaviour
             }
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (orderStack.Count > 0)
+        {
+            Gizmos.color = Color.yellow;
+            if (orderStack.Peek().GetType() == typeof(MoveOrder))
+            {
+                MoveOrder order = (MoveOrder) orderStack.Peek();
+                Gizmos.DrawSphere(order.Location, 0.5f);
+            }
+            
+        }
+    }
+
+    #endregion
+
 }

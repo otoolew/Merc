@@ -13,6 +13,9 @@ public class LevelArea : MonoBehaviour
     [SerializeField] private PatrolCircuit patrolCircuit;
     public PatrolCircuit PatrolCircuit { get => patrolCircuit; set => patrolCircuit = value; }
     
+    [SerializeField] private PatrolState patrolState;
+    public PatrolState PatrolState { get => patrolState; set => patrolState = value; }
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -30,8 +33,9 @@ public class LevelArea : MonoBehaviour
         AICharacter enemy = Instantiate(characterPrefab, null);
         enemy.gameObject.transform.position = spawnPoint.position;
         enemy.Controller.AssignedLevelArea = this;
-        enemy.MovementComp.PatrolCircuit = patrolCircuit;
-        enemy.MovementComp.ContinueToPatrolPoint();
+        //enemy.Controller.PushState(new PatrolState(enemy.Controller, patrolCircuit, 0));
+        // enemy.MovementComp.PatrolCircuit = patrolCircuit;
+        // enemy.MovementComp.ContinueToPatrolPoint();
         Debug.Log("Spawned Character");
     }
 }

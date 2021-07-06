@@ -21,22 +21,30 @@ public class AttackStateBehaviour : StateBehaviour
     [SerializeField] private VisionPerception visionPerception;
     public VisionPerception VisionPerception { get => visionPerception; set => visionPerception = value; }
 
-    #region StateVariables
-    [Header("State Variables")]
+    // #region StateVariables
+    // [Header("State Variables")]
+    // [SerializeField] private HealthComponent targetHealth;
+    // public HealthComponent TargetHealth { get => targetHealth; set => targetHealth = value; }
+    //
+    // #endregion
+    
+    #region States
+    [Header("States")]
     [SerializeField] private HealthComponent targetHealth;
     public HealthComponent TargetHealth { get => targetHealth; set => targetHealth = value; }
     
     [SerializeField] private BoolVariable hasTarget;
     public BoolVariable HasTarget { get => hasTarget; set => hasTarget = value; }
     #endregion
-    
     [SerializeField] private StateBehaviour cautionState;
     public StateBehaviour CautionState { get => cautionState; set => cautionState = value; }
     
     [SerializeField] private StateBehaviour idleState;
     public StateBehaviour IdleState { get => idleState; set => idleState = value; }
 
-
+    [SerializeField] private UnityEvent<StateBehaviour, StateBehaviour> onOrdersComplete;
+    public override UnityEvent<StateBehaviour, StateBehaviour> OnOrdersComplete { get => onOrdersComplete; set => onOrdersComplete = value; }
+    
     private void Start()
     {
         controller = GetComponent<AIController>();
@@ -61,7 +69,7 @@ public class AttackStateBehaviour : StateBehaviour
     {
         if (!visionPerception.TargetInLineOfSight())
         {
-            controller.TransitionToState(cautionState);
+            //controller.TransitionToState(cautionState);
             return;
         }
         movementComp.RotateTo(visionPerception.CurrentTarget.WorldLocation);

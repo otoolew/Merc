@@ -15,11 +15,7 @@ public class AIMovement : CharacterMovement
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent { get => navAgent; set => navAgent = value; }
     
-    [SerializeField] private PatrolCircuit patrolCircuit;
-    public PatrolCircuit PatrolCircuit { get => patrolCircuit; set => patrolCircuit = value; }
 
-    [SerializeField] private int currentWaypointIndex;
-    public int CurrentWaypointIndex { get => currentWaypointIndex; set => currentWaypointIndex = value; }
     #endregion
     
     #region Values
@@ -119,40 +115,40 @@ public class AIMovement : CharacterMovement
     {
         return Vector3.Distance(transform.position, CurrentDestination) <= navAgent.stoppingDistance;
     }
-    
-    public void ContinueToPatrolPoint()
-    {
-        if (CurrentWaypointIndex < patrolCircuit.PatrolpointList.Count)
-        {
-            SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
-        }
-    }
-    
-    public void GoToNextPatrolPoint()
-    {
-        CurrentWaypointIndex++;
-        if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
-        {
-            CurrentWaypointIndex = 0;
-        }
-
-        SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
-    }
-    public Vector3 GetCurrentPatrolPoint()
-    {
-        return patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position;
-    }
-    
-    public void RandomLocationInRadius()
-    {
-        CurrentWaypointIndex++;
-        if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
-        {
-            CurrentWaypointIndex = 0;
-        }
-
-        SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
-    }
+    //
+    // public void ContinueToPatrolPoint()
+    // {
+    //     if (CurrentWaypointIndex < patrolCircuit.PatrolpointList.Count)
+    //     {
+    //         SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+    //     }
+    // }
+    //
+    // public void GoToNextPatrolPoint()
+    // {
+    //     CurrentWaypointIndex++;
+    //     if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
+    //     {
+    //         CurrentWaypointIndex = 0;
+    //     }
+    //
+    //     SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+    // }
+    // public Vector3 GetCurrentPatrolPoint()
+    // {
+    //     return patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position;
+    // }
+    //
+    // public void RandomLocationInRadius()
+    // {
+    //     CurrentWaypointIndex++;
+    //     if (CurrentWaypointIndex >= patrolCircuit.PatrolpointList.Count)
+    //     {
+    //         CurrentWaypointIndex = 0;
+    //     }
+    //
+    //     SetDestination(patrolCircuit.PatrolpointList[CurrentWaypointIndex].transform.position);
+    // }
 
     #region Editor
     private void OnDrawGizmos()
