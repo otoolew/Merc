@@ -34,11 +34,6 @@ public class BoolVariable : Variable
     {
         this.value = value;
     }
-
-    // public override VariableType VariableType => VariableType.BOOL;
-    
-    // [SerializeField] private UnityEvent<Variable> onValueChanged;
-    // public override UnityEvent<Variable> OnValueChanged { get => onValueChanged; set => onValueChanged = value; }
     // public static BoolVariable Create(string variableName, bool startingValue)
     // {
     //     BoolVariable variable = ScriptableObject.CreateInstance<BoolVariable>();

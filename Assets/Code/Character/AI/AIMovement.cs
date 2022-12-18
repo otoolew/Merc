@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AIMovement : CharacterMovement
+public class AIMovement : MonoBehaviour
 {
     #region Components
     [SerializeField] private Rigidbody rigidbodyComp;
@@ -43,13 +43,13 @@ public class AIMovement : CharacterMovement
         if (navAgent)
         {
             navAgent.stoppingDistance = stoppingDistance;
-            navAgent.speed = MoveSpeed;
-            navAgent.angularSpeed = RotationSpeed;
+            navAgent.speed = 10;
+            navAgent.angularSpeed = 180;
             navAgent.acceleration = accelerationSpeed;
         }
     }
   
-    public override void Move(Vector3 moveVector)
+    public void Move(Vector3 moveVector)
     {
         Debug.Log("Moving...");
         if (navAgent.isActiveAndEnabled)
@@ -62,14 +62,14 @@ public class AIMovement : CharacterMovement
         }
     }
     
-    public override void RotateTo(Vector3 value)
+    public void RotateTo(Vector3 value)
     {
         Vector3 direction = value - transform.position;
         
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         if (targetRotation.eulerAngles != Vector3.zero)
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 180 * Time.deltaTime);
         }
     }
     
@@ -103,7 +103,7 @@ public class AIMovement : CharacterMovement
         SetDestination(transform.position);
     }
 
-    public override void SetDestination(Vector3 moveVector)
+    public void SetDestination(Vector3 moveVector)
     {
         if (navAgent.isActiveAndEnabled)
         {

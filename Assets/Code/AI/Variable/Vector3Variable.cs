@@ -19,7 +19,7 @@ public class Vector3Variable : Variable
     public Vector3Variable(string variableName, Vector3 value)
     {
         this.variableName = variableName;
-        variableType = VariableType.GAMEOBJECT;
+        variableType = VariableType.VECTOR3;
         this.value = value;
     }
     
@@ -32,11 +32,7 @@ public class Vector3Variable : Variable
     {
         this.value = value;
     }
-    // public Vector3Variable(string variableName, Vector3 value)
-    // {
-    //     this.variableName = variableName;
-    //     this.value = value;
-    // 
+
     // [SerializeField] private UnityEvent<Variable> onValueChanged;
     // public override UnityEvent<Variable> OnValueChanged { get => onValueChanged; set => onValueChanged = value; }
     // public static Vector3Variable Create(string variableName, Vector3 value)

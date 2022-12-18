@@ -1,15 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Merc;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     #region Input
-
-    //[SerializeField] private PlayerInput playerInput;
-    //public PlayerInput PlayerInput { get => playerInput; set => playerInput = value; }
-
+    
     [SerializeField] private PlayerControls inputActions;
     public PlayerControls InputActions { get => inputActions; set => inputActions = value; }
     #endregion
@@ -28,6 +26,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerCharacter playerCharacter;
     public PlayerCharacter PlayerCharacter { get => playerCharacter; set => playerCharacter = value; }
 
+    [SerializeField] private Vector2 moveInput;
+    public Vector2 MoveInput { get => moveInput; set => moveInput = value; }
+
+    [SerializeField] private Vector2 lookInput;
+    public Vector2 LookInput { get => lookInput; set => lookInput = value; }
+    
+    [SerializeField] private bool interactInput;
+    public bool InteractInput { get => interactInput; set => interactInput = value; }
+    
     #region Monobehaviour 
     private void Awake()
     {   
@@ -36,19 +43,24 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        //Debug.Log(playerInput.actionEvents.ToArray().ToString());
+        inputActions.UI.Pause.performed += PauseOnPerformed;
         inputActions.UI.Enable();
-        inputActions.UI.Pause.performed += OnPause;
+        
+        inputActions.Character.Move.started += MoveOnPerformed;
+        inputActions.Character.Move.performed += MoveOnPerformed;
+        inputActions.Character.Move.canceled += MoveOnPerformed;
+        
+        inputActions.Character.Look.performed += LookOnPerformed;
+        
+        inputActions.Character.Interaction.started += InteractOnStarted;
+        inputActions.Character.Interaction.performed += InteractOnPerformed;
+        inputActions.Character.Interaction.canceled += InteractOnCanceled;
+        
         inputActions.Character.Enable();
-
-        // Get Control Schemes
-        InputControlScheme[] schemeList = inputActions.controlSchemes.ToArray();
-        for (int i = 0; i < schemeList.Length; i++)
-        {
-            Debug.Log("Scheme BindingGroup: " + schemeList[i].bindingGroup);
-        }
-
     }
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -57,9 +69,9 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
+        
     }
 
     private void OnDisable()
@@ -67,12 +79,21 @@ public class PlayerController : MonoBehaviour
         ReleaseCharacter();
         if (inputActions != null)
         {
-            inputActions.UI.Pause.performed -= OnPause;
-            inputActions.UI.Disable();
+            inputActions.UI.Pause.performed -= PauseOnPerformed;
+            
+            inputActions.Character.Move.started -= MoveOnPerformed;
+            inputActions.Character.Move.performed -= MoveOnPerformed;
+            inputActions.Character.Move.canceled -= MoveOnPerformed;
+            
+            inputActions.Character.Look.performed -= LookOnPerformed;
+            
+            inputActions.Character.Interaction.performed -= InteractOnPerformed;
+            inputActions.Character.Interaction.performed -= InteractOnPerformed;
+            inputActions.Character.Interaction.canceled -= InteractOnCanceled;
             inputActions.Character.Disable();
-        }
 
- 
+        }
+        
     }
 
     private void OnDestroy()
@@ -85,11 +106,11 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region PlayerInput Calls
-    private void OnPause(InputAction.CallbackContext callbackContext)
+    private void PauseOnPerformed(InputAction.CallbackContext context)
     {
         if (playerUI)
         {
-            if (callbackContext.performed)
+            if (context.performed)
             {
                 if (GameManager.Instance.GameMode.CurrentGameState != GameState.PAUSED)
                 {
@@ -102,7 +123,39 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    private void MoveOnPerformed(InputAction.CallbackContext context)
+    {
+        if (context.started || context.performed)
+        {
+            moveInput = context.ReadValue<Vector2>();
+        }
+        else
+        {
+            moveInput = Vector2.zero;
+        }
+    }
+    private void LookOnPerformed(InputAction.CallbackContext context)
+    {
+        lookInput = context.ReadValue<Vector2>();
+    }
+    private void InteractOnStarted(InputAction.CallbackContext context)
+    {
+        interactInput = true;
+        if (PlayerCharacter != null)
+        {
+            playerCharacter.onUseInteractable.Invoke();
+        }
+    }
+    private void InteractOnPerformed(InputAction.CallbackContext context)
+    {
+        
+        interactInput = true;
+    }
+    private void InteractOnCanceled(InputAction.CallbackContext context)
+    {
+        interactInput = false;
+    }
+    
     #endregion
     #region Character Methods
     public void PossessCharacter(PlayerCharacter character)
@@ -110,19 +163,23 @@ public class PlayerController : MonoBehaviour
         if (character)
         {
             // CharacterInput
-            character.PlayerController = this;
+            //character.PlayerController = this;
             playerCharacter = character;
 
-            character.GetComponent<PlayerMovement>().InputActions = inputActions;
-            character.GetComponent<PlayerMovement>().GamepadEnabled = gamepadEnabled;
+            //character.GetComponent<PlayerMovement>().InputActions = inputActions;
+            //character.GetComponent<PlayerMovement>().GamepadEnabled = gamepadEnabled;
   
             #region Character Input
-
+            /*
+            inputActions.Character.Enable();
             inputActions.Character.Look.started += playerCharacter.MovementComp.OnLook;
             inputActions.Character.Look.performed += playerCharacter.MovementComp.OnLook;
             inputActions.Character.Look.canceled += playerCharacter.MovementComp.OnLook;
 
-
+            inputActions.Character.Move.started += playerCharacter.MovementComp.OnMove;
+            inputActions.Character.Move.performed += playerCharacter.MovementComp.OnMove;
+            inputActions.Character.Move.canceled += playerCharacter.MovementComp.OnMove;
+            
             inputActions.Character.Left_PullTrigger.started += playerCharacter.OnLeftPullTrigger;
             inputActions.Character.Right_PullTrigger.performed += playerCharacter.OnRightPullTrigger;
             inputActions.Character.Left_PullTrigger.canceled += playerCharacter.OnLeftPullTrigger;
@@ -137,8 +194,8 @@ public class PlayerController : MonoBehaviour
 
             inputActions.Character.Dash.started += playerCharacter.OnDashPullTrigger;
             inputActions.Character.Dash.canceled += playerCharacter.OnDashPullTrigger;
-
-            inputActions.Character.Enable();
+            */
+            
             #endregion
             playerCharacter.SetUpPlayerUI(PlayerUI);
 
@@ -149,10 +206,14 @@ public class PlayerController : MonoBehaviour
     {
         if (playerCharacter)
         {
-            inputActions.Character.Look.started -= playerCharacter.MovementComp.OnLook;
+            /*inputActions.Character.Look.started -= playerCharacter.OnLook;
             inputActions.Character.Look.performed -= playerCharacter.MovementComp.OnLook;
             inputActions.Character.Look.canceled -= playerCharacter.MovementComp.OnLook;
-
+            
+            inputActions.Character.Move.started -= playerCharacter.MovementComp.OnMove;
+            inputActions.Character.Move.performed -= playerCharacter.MovementComp.OnMove;
+            inputActions.Character.Move.canceled -= playerCharacter.MovementComp.OnMove;
+            
             inputActions.Character.Left_PullTrigger.started -= playerCharacter.OnLeftPullTrigger;
             inputActions.Character.Left_PullTrigger.canceled -= playerCharacter.OnLeftPullTrigger;
             inputActions.Character.Left_Reload.started -= playerCharacter.OnLeftReload;
@@ -164,7 +225,7 @@ public class PlayerController : MonoBehaviour
             inputActions.Character.UseInteraction.started -= playerCharacter.OnUseInteraction;
 
             inputActions.Character.Dash.started -= playerCharacter.OnDashPullTrigger;
-            inputActions.Character.Dash.canceled -= playerCharacter.OnDashPullTrigger;
+            inputActions.Character.Dash.canceled -= playerCharacter.OnDashPullTrigger;*/
 
             inputActions.Character.Disable();
         }
@@ -178,6 +239,11 @@ public class PlayerController : MonoBehaviour
     public void DisableCharacterInput()
     {
         inputActions.Character.Disable();
+    }
+
+    private void OnMove()
+    {
+        
     }
     #endregion
 }

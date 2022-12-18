@@ -34,7 +34,10 @@ public class CharacterMovement : MonoBehaviour
     {
     }
 
+    public virtual void OnMove(InputAction.CallbackContext callbackContext)
+    {
 
+    }
     public virtual void OnLook(InputAction.CallbackContext callbackContext)
     {
 

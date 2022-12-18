@@ -42,7 +42,7 @@ public class Projectile : MonoBehaviour, IPoolable
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag(ownerTag))
+        if (ownerTag == null || collision.gameObject.CompareTag(ownerTag))
             return;
 
         HealthComponent hitObject = collision.collider.GetComponent<HealthComponent>();

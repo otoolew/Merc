@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 [Serializable] public enum GameState { RUNNING, PAUSED, LOADING, GAME_OVER }
 [Serializable] public class GameStateChange : UnityEvent<GameState, GameState> { }
 /// <summary>
-/// GameMode Handles everything about a game. Game Time, Spawn points, Enemy Count, Victory COnditions etc...
+/// GameMode Handles everything about a game. Game Time, Spawn points, Enemy Count, Victory Conditions etc...
 /// </summary>
 public class GameMode : Singleton<GameMode>
 {

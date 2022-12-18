@@ -84,17 +84,16 @@ public class UnityDictionaryDrawer : PropertyDrawer
         rect0.width = halfWidth;
         rect0.y += 1f;
         rect0.height -= 2f;
-
-
+        
         EditorGUIUtility.labelWidth = 40;
 
         EditorGUI.BeginChangeCheck();
         EditorGUI.PropertyField(rect0, keyProp);
-        EditorGUI.PropertyField(rect0, keyProp);
+        //EditorGUI.PropertyField(rect0, keyProp);
         rect0.x += halfWidth + 4f;
 
+        //EditorGUI.LabelField(rect0,valueProp.type);
         EditorGUI.PropertyField(rect0, valueProp);
-
         EditorGUIUtility.labelWidth = prevLabelWidth;
 
         EditorGUI.EndProperty();

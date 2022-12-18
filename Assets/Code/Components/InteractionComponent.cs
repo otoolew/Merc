@@ -14,15 +14,8 @@ public class InteractionComponent : MonoBehaviour
     protected virtual void Start()
     {
         InteractionIcon.SetActive(false);
-        if (onInteraction == null)
-        {
-            onInteraction = new UnityEvent();
-        }
-
-        if (onLeaveConsole == null)
-        {
-            onLeaveConsole = new UnityEvent();
-        }
+        onInteraction ??= new UnityEvent();
+        onLeaveConsole ??= new UnityEvent();
     }
 
     protected virtual void OnTriggerEnter(Collider other)

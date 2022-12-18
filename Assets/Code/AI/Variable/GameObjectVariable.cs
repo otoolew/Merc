@@ -16,11 +16,6 @@ public class GameObjectVariable : Variable
     [SerializeField] private GameObject value;
     public GameObject Value { get => value; set => this.value = value; }
     
-    // public GameObjectVariable(string variableName, GameObject value)
-    // {
-    //     this.variableName = variableName;
-    //     this.value = value;
-    // }
     public GameObjectVariable(string variableName, GameObject value)
     {
         this.variableName = variableName;

@@ -63,7 +63,6 @@ public class AICharacter : Character
     }
 
     #region Character
-
     public void Attack()
     {
         if (VisionPerception.CurrentTarget != null)

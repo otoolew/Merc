@@ -27,10 +27,6 @@ public class IntVariable : Variable
     {
         this.value = value;
     }
-    
-    // [SerializeField] private UnityEvent<Variable> onValueChanged;
-    // public override UnityEvent<Variable> OnValueChanged { get => onValueChanged; set => onValueChanged = value; }
-    
     // public static IntVariable Create(string variableName, int value)
     // {
     //     IntVariable variable = ScriptableObject.CreateInstance<IntVariable>();

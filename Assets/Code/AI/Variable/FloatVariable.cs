@@ -14,11 +14,6 @@ public class FloatVariable : Variable
     [SerializeField] private float value;
     public float Value { get => value; set => this.value = value; }
     
-    // public FloatVariable(string variableName, float value)
-    // {
-    //     this.variableName = variableName;
-    //     this.value = value;
-    // }
     public FloatVariable(string variableName, float value)
     {
         this.variableName = variableName;
