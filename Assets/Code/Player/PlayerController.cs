@@ -20,8 +20,8 @@ public class PlayerController : MonoBehaviour
     public PlayerUI PlayerUI { get => playerUI; set => playerUI = value; }
     #endregion
 
-    [SerializeField] private bool gamepadEnabled;
-    public bool GamepadEnabled { get => gamepadEnabled; set => gamepadEnabled = value; }
+    [SerializeField] private bool mouseEnabled;
+    public bool MouseEnabled { get => mouseEnabled; set => mouseEnabled = value; }
 
     [SerializeField] private PlayerCharacter playerCharacter;
     public PlayerCharacter PlayerCharacter { get => playerCharacter; set => playerCharacter = value; }
@@ -137,6 +137,16 @@ public class PlayerController : MonoBehaviour
     private void LookOnPerformed(InputAction.CallbackContext context)
     {
         lookInput = context.ReadValue<Vector2>();
+        if (context.action.activeControl?.device.description.deviceClass == "Mouse")
+        {
+            MouseEnabled = true;
+        }
+        else
+        {
+            MouseEnabled = false;
+        }
+        
+        
     }
     private void InteractOnStarted(InputAction.CallbackContext context)
     {
