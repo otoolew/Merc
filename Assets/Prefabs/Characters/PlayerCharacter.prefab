@@ -147,7 +147,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: KeyboardMouse
   m_DefaultActionMap: Character
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 0}
   playerUI: {fileID: 0}
-  gamepadEnabled: 0
+  mouseEnabled: 0
   playerCharacter: {fileID: 5886720481002854995}
   moveInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
@@ -184,6 +184,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 2800246255725358637}
   moveSpeed: 10
+  lookSpeed: 180
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  lookOffset: {x: 0, y: 0, z: 0}
+  mouseLookLayer:
+    serializedVersion: 2
+    m_Bits: 64
   rigidbodyComp: {fileID: 4064287071184895284}
   animatorComp: {fileID: 4064287071184895273}
   characterControllerComp: {fileID: 4064287071184895282}
